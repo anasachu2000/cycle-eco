@@ -1,0 +1,25 @@
+<% if (session != null) { %>
+                            
+    <button class="btn btn-primary" onclick="addtocart('<%=productData._id%>')">Add To Cart</button>
+    
+    <% } else { %>
+    <button class="btn btn-primary" onclick="plzlogin()">Add To Cart</button>
+<% } %>
+
+
+
+function plzlogin(){
+    $.ajax({
+        success:(response)=>{
+            
+                swal.fire({
+                    positon:'center',
+                   //  icon:"success",
+                    title  : 'Please Login To Your Account',
+                    showConfirmButton:false,
+                    timer : 1500,
+                })
+            
+        }
+    })
+   }

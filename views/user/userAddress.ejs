@@ -1,0 +1,51 @@
+<%- include('../userLayouts/header.ejs') %>
+<%- include('../userLayouts/navbar.ejs') %>
+<%- include('../userLayouts/accountSidebar.ejs') %>
+                            
+<div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-end pb-2">
+                <a href="/insertAddress" type="button" class="btn btn-outline-primary-2"> Add
+                    Address</a>
+            </div>
+            <% if(address.length> 0){
+                address.forEach((address)=>{
+                %>
+            <div class="card card-dashboard">
+                <div class="card-body">
+                    <ul>
+                        <h3 class="card-title"> Address</h3><!-- End .card-title -->
+                        <li>Name : <%=address.userName %>
+                        </li>
+                        <li>mobile : <%=address.mobile %>
+                        </li>
+                        <li>altrenativeMob : <%=address.altrenativeMob %>
+                        </li>
+                        <li>houseName : <%=address.houseName %>
+                        </li>
+                        <li>city : <%=address.city %>
+                        </li>
+                        <li>state : <%=address.state %>
+                        </li>
+                        <li>pincode : <%=address.pincode %>
+                        </li>
+                        <li>landmark : <%=address.landmark %>
+                        </li>
+                        <a href="">
+                            <button type="button" class="btn btn-outline-primary-2">
+                                Edit
+                            </button>
+                        </a>
+                        <button type="button" class="btn btn-outline-primary-2">
+                            Delete
+                        </button>
+                    </ul>
+                </div><!-- End .card-body -->
+            </div><!-- End .card-dashboard -->
+            <% }) } %>  
+        </div><!-- End .col-lg-6 --> 
+    </div><!-- End .row -->
+</div><!-- .End .tab-pane -->                                         
+<%- include('../userLayouts/accountFooter.ejs') %>
+<%- include('../userLayouts/footer.ejs') %>

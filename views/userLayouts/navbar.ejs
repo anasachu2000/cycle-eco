@@ -1,0 +1,104 @@
+<style>
+    .swal2-popup {
+         background-color: #292727; /* Set your desired background color */
+         color: #ffffff; /* Set your desired text color */
+         font-family: sans-serif;
+         font-size: 9px;
+         font-weight: normal;
+     }
+ </style>
+<header class="header">
+    <div class="header-top">
+        <div class="container">
+            <div class="header-right">
+                <ul class="top-menu">
+                    <li>
+                        <a href="#">Links</a>
+                        <ul class="pt-1">
+                            <%
+                            if(session == null){
+                                %>
+                               <li><a href="/login" >Login</a></li>
+                               <li><a href="/register" >register</a></li>
+                               <%
+                                }else{ 
+                                    %>
+                                    <li><a href="/userdasboard"><i class="icon-user"><%=user.name%></i></a>
+                               <%
+                                }
+                                %>
+                        </ul>
+                    </li>
+                </ul><!-- End .top-menu -->
+            </div><!-- End .header-right -->
+        </div><!-- End .container -->
+    </div><!-- End .header-top -->
+
+    <div class="header-middle sticky-header">
+        <div class="container">
+            <div class="header-left">
+                <button class="mobile-menu-toggler">
+                    <span class="sr-only">Toggle mobile menu</span>
+                    <i class="icon-bars"></i>
+                </button>
+
+                <a href="/home" class="logo">
+                    <img src="assets/images/logo.png" alt="Logo" width="105" height="25">
+                </a>
+
+                <nav class="main-nav">
+                    <ul class="menu sf-arrows">
+                        <li class="megamenu-container active">
+                            <a href="/home">Home</a>
+                        </li>
+                        <li>
+                            <a href="/product">Shop</a>
+                        </li>
+                    </ul><!-- End .menu -->
+                </nav><!-- End .main-nav -->
+            </div><!-- End .header-left -->
+
+            <div class="header-right">
+                <div class="header-search">
+                    <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
+                    <form action="#" method="get">
+                        <div class="header-search-wrapper">
+                            <label for="q" class="sr-only">Search</label>
+                            <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
+                        </div><!-- End .header-search-wrapper -->
+                    </form>
+                </div><!-- End .header-search -->
+                
+
+                <div class="dropdown cart-dropdown">
+                    <% if (session != null) { %>
+                   <a href="/cart" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false" data-display="static">
+                       <i class="icon-shopping-cart"></i>
+                   </a>
+                <% } else { %>
+                    <a onclick="plzlogin()" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false" data-display="static">
+                       <i class="icon-shopping-cart"></i>
+                   </a>
+                <% } %>
+                </div><!-- End .cart-dropdown -->
+            </div><!-- End .header-right -->
+        </div><!-- End .container -->
+    </div><!-- End .header-middle -->
+</header><!-- End .header -->
+<script>
+    function plzlogin() {
+        $.ajax({
+            success: (response) => {
+                swal.fire({
+                    position: 'top',
+                    title: '! Please Login To Your Account',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    customClass: {
+                        popup: 'my-swal-class',
+                    },
+                });
+            }
+        });
+    }
+</script>

@@ -1,0 +1,49 @@
+<%- include('../adminLayouts/header.ejs') %>
+
+<div class="container-fluid position-relative d-flex p-0">
+    <!-- Sign Up Start -->
+    <div class="container-fluid">
+        <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3" style="background-color: #191c249d  !important;">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h3>Sign Up</h3>
+                    </div>
+                    <form action="/register" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingText" placeholder="jhondoe" name="name" required>
+                        <label for="floatingText">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" required>
+                        <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="9747519239" name="number" required>
+                        <label for="floatingInput">Number</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" required>
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="CfPassword" required>
+                        <label for="floatingPassword">Confirm Password</label>
+                    </div>
+                    <% 
+                    if(typeof message !== 'undefined'){
+                    %>
+                    <p style="color: red;text-align: center;"><%= message %></p>
+                    <%
+                    }
+                    %>
+                    
+                    <a href="/otpVerification"><button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign Up</button></a>
+                </form>
+                    <p class="text-center mb-0">Already have an Account? <a href="/login">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sign Up End -->
+</div>

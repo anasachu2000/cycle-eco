@@ -1,0 +1,133 @@
+<%- include('../adminLayouts/header.ejs') %>
+<%- include('../adminLayouts/navbar.ejs') %>
+<!-- Table Start -->  
+
+
+  <div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+      <div class="col-12">
+        <div class="bg-secondary rounded h-100 p-4">
+          <div style="display: flex; justify-content: space-between;">
+            <h6 class="mb-4">Category Table</h6>                                
+            <button type="button" class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              data-bs-whatever="@mdo">Add Category</button>
+           </div>
+            <% if (typeof message !== undefined) { %>
+            <span style="color: red;" class="pb-2"><%= message %></span>
+            <% } %> 
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">Category Name</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% 
+              if(category.length > 0){
+                for(let i = 0;i < category.length;i++){
+                  %>
+              <tr>
+                
+                <td><%= i+1 %></td>
+                <td><%= category[i].categoryName %></td>
+                <td>
+                  <a href="#" class="" data-bs-toggle="modal" data-bs-target="#editCategoryModal-<%= category[i]._id %>"><i class="bi bi-pencil-square bi fs-4"></i></a>
+                  <a href="" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= category[i]._id %>"><i class="bi bi-trash bi fs-4 ms-3"></i></a>
+
+                </td>
+              </tr>
+              <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop<%= category[i]._id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content" style="background-color: #191C24;color: aliceblue;">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Delete Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <p>Are you sure you want to delete category <%= category[i].categoryName %>?</p>
+                    </div>
+                    <div class="modal-footer">
+                    <a href="/admin/categoryList"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button></a>
+                    <a href="/admin/deleteCategory?id=<%= category[i]._id %>"><button type="button" class="btn btn-primary">Yes</button></a>
+                    
+                    </div>
+                </div>
+                </div>
+            </div>
+              <%
+            }
+            }else{
+              %>
+              <tr>
+                <td colspan="5">Users not found</td>
+              </tr>
+              <%
+            }
+              %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Table End -->
+
+
+<!-- Category inserting modal section -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #191C24;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/categoryList" method="post">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Category Name</label>
+              <input type="text" class="form-control" id="recipient-name" name="name">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Category editing modal section -->
+
+<!-- Edit Category Modal -->
+<% for (let i = 0; i < category.length; i++) { %>
+<div class="modal fade" id="editCategoryModal-<%= category[i]._id %>" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background-color: #191C24;">
+      <!-- Modal content for editing category -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/updateCategory" method="post">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Edit Category Name</label>
+            <input type="text" class="form-control" id="recipient-name" name="categoryName" value="<%= category[i].categoryName %>">
+            <input type="hidden" name="id" value="<%= category[i]._id %>">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+
+    
+<%- include('../adminLayouts/footer.ejs') %>  

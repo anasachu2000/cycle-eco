@@ -1,0 +1,35 @@
+<%- include('../adminLayouts/header.ejs') %>
+<!-- Sign In Start -->
+<div class="container-fluid bg-img">
+    <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3" style="background-color: #191c249d  !important;">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <a href="index.html" class="">
+                        
+                    </a>
+                    <h4>Admin Login</h4>
+                </div>
+                <form action="" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
+                        <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <% 
+                    if(typeof message !== 'undefined'){
+                    %>
+                    <p style="color: red;text-align: center;"><%= message %></p>
+                    <%
+                    }
+                    %>
+                    <button type="submit" class="btn btn-outline-danger py-3 w-100 mb-4">Sign In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sign In End -->

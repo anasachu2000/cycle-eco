@@ -1,0 +1,127 @@
+<%- include('../userLayouts/header.ejs') %>
+<%- include('../userLayouts/navbar.ejs') %>
+<style>
+    .swal2-popup {
+         background-color: #292727; /* Set your desired background color */
+         color: #ffffff; /* Set your desired text color */
+         font-family: sans-serif;
+         font-size: 9px;
+         font-weight: normal;
+     }
+ </style>
+
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container d-flex align-items-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                <li class="breadcrumb-item"><a href="/product">Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Product View</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="container">
+            <div class="product-details-top">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="product-gallery product-gallery-vertical">
+                            <div class="row">
+                                <figure class="product-main-image">
+                                    <img id="product-zoom" src="/adminAssets/adminImages/<%= product.image[0] %>" >
+
+                                    <a href="/adminAssets/adminImages/<%= product.image[0] %>" id="btn-product-gallery" class="btn-product-gallery">
+                                        <i class="icon-arrows"></i>
+                                    </a>
+                                </figure><!-- End .product-main-image -->
+
+                                <div id="product-zoom-gallery" class="product-image-gallery">
+                                    <a class="product-gallery-item active" href="/adminAssets/adminImages/<%= product.image[0] %>" data-image="/adminAssets/adminImages/<%= product.image[0] %>" data-zoom-image="/adminAssets/adminImages/<%= product.image[0] %>">
+                                        <img src="/adminAssets/adminImages/<%= product.image[0] %>" alt="product side">
+                                    </a>
+
+                                    <a class="product-gallery-item" href="/adminAssets/adminImages/<%= product.image[1] %>" data-image="/adminAssets/adminImages/<%= product.image[1] %>" data-zoom-image="/adminAssets/adminImages/<%= product.image[1] %>">
+                                        <img src="/adminAssets/adminImages/<%= product.image[1] %>" alt="product cross">
+                                    </a>
+
+                                    <a class="product-gallery-item" href="/adminAssets/adminImages/<%= product.image[2] %>" data-image="/adminAssets/adminImages/<%= product.image[2] %>" data-zoom-image="/adminAssets/adminImages/<%= product.image[2] %>">
+                                        <img src="/adminAssets/adminImages/<%= product.image[2] %>" alt="product with model">
+                                    </a>
+
+                                    <a class="product-gallery-item" href="/adminAssets/adminImages/<%= product.image[3] %>" data-image="/adminAssets/adminImages/<%= product.image[3] %>" data-zoom-image="/adminAssets/adminImages/<%= product.image[3] %>">
+                                        <img src="/adminAssets/adminImages/<%= product.image[3] %>" alt="product back">
+                                    </a>
+                                </div><!-- End .product-image-gallery -->
+                            </div><!-- End .row -->
+                        </div><!-- End .product-gallery -->
+                    </div><!-- End .col-md-6 -->
+
+                    <div class="col-md-6">
+                        <div class="product-details">
+                            <h1 class="product-title"><%= product.productName %></h1><!-- End .product-title -->
+                            <div class="product-price">
+                                ₹<%=product.price%>.00
+                            </div><!-- End .product-price -->
+
+                            <div class="product-content">
+                                <p><%= product.description %></p>
+                            </div><!-- End .product-content -->
+                            <div class="product-details-action">
+                                <% if (session != null) { %>
+                                <a  onclick="addToCart('<%= product._id %>')" class="btn btn-primary text-white py-4 my-4"><span>add to cart</span></a>
+                                <% } else { %>
+                                    <button class="btn btn-primary" onclick="plzlogin()">Add To Cart</button>
+                                <% } %>  
+                                <div class="details-action-wrapper">
+                                    <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                </div><!-- End .details-action-wrapper -->
+                            </div><!-- End .product-details-action -->
+                        </div><!-- End .product-details -->
+                    </div><!-- End .col-md-6 -->
+                </div><!-- End .row -->
+            </div><!-- End .product-details-top -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+
+<script>
+    function addToCart(productId){
+        $.ajax({
+            url:'/addToCart',
+            method:'post',
+            data:{
+                id:productId
+            },
+            success:(response)=>{  
+                if(response.success){
+                    swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Product added to cart',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    });
+                }
+            }
+        })
+    }
+    function plzlogin() {
+        $.ajax({
+            success: (response) => {
+                swal.fire({
+                    position: 'top',
+                    title: '! Please Login To Your Account',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    customClass: {
+                        popup: 'my-swal-class',
+                    },
+                });
+            }
+        });
+    }
+</script>
+
+<%- include('../userLayouts/footer.ejs') %>
