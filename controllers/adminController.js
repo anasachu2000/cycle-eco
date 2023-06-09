@@ -92,7 +92,7 @@ const block = async (req,res)=>{
 const unblock = async (req,res)=>{
     try{
         const userData = await User.findByIdAndUpdate(req.query.id,{$set:{is_block:false}});
-        req.session.useres = null
+        // req.session.useres = null
         res.redirect('/admin/userList')
     }catch(error){
         console.log(error.message);

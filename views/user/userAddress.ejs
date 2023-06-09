@@ -1,12 +1,16 @@
 <%- include('../userLayouts/header.ejs') %>
 <%- include('../userLayouts/navbar.ejs') %>
 <%- include('../userLayouts/accountSidebar.ejs') %>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+
                             
 <div>
     <div class="row">
         <div class="col-lg-12">
             <div class="d-flex justify-content-end pb-2">
-                <a href="/insertAddress" type="button" class="btn btn-outline-primary-2"> Add
+                <a  type="button" class="btn btn-outline-primary-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> Add
                     Address</a>
             </div>
             <% if(address.length> 0){
@@ -18,22 +22,22 @@
                         <h3 class="card-title"> Address</h3><!-- End .card-title -->
                         <li>Name : <%=address.userName %>
                         </li>
-                        <li>mobile : <%=address.mobile %>
+                        <li>mobile : <%=address.mobile %> 
                         </li>
                         <li>altrenativeMob : <%=address.altrenativeMob %>
                         </li>
                         <li>houseName : <%=address.houseName %>
                         </li>
-                        <li>city : <%=address.city %>
+                        <li>city : <%=address.city %> 
                         </li>
                         <li>state : <%=address.state %>
                         </li>
                         <li>pincode : <%=address.pincode %>
                         </li>
-                        <li>landmark : <%=address.landmark %>
+                        <li>landmark : <%=address.landmark %> 
                         </li>
-                        <a href="">
-                            <button type="button" class="btn btn-outline-primary-2">
+                        <a>
+                            <button class="btn btn-outline-primary-2" data-bs-toggle="modal" data-bs-target="#editModal-<%= address._id %>">
                                 Edit
                             </button>
                         </a>
@@ -46,6 +50,117 @@
             <% }) } %>  
         </div><!-- End .col-lg-6 --> 
     </div><!-- End .row -->
-</div><!-- .End .tab-pane -->                                         
+</div><!-- .End .tab-pane -->   
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 450px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/userAddressList" method="post">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Username:</label>
+            <input type="text" class="form-control" id="recipient-name" name="Username" >
+            <input type="hidden" name="id" > 
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Mobile:</label>
+            <input type="text" class="form-control" id="recipient-name" name="number" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">AltrenativeMobile:</label>
+            <input type="text" class="form-control" id="recipient-name" name="AltrenativeMobile" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">House Name:</label>
+            <input type="text" class="form-control" id="recipient-name" name="houseName" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">City:</label>
+            <input type="text" class="form-control" id="recipient-name" name="city" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">State:</label>
+            <input type="text" class="form-control" id="recipient-name" name="state" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Pincode:</label>
+            <input type="text" class="form-control" id="recipient-name" name="pincode" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Landmark:</label>
+            <input type="text" class="form-control" id="recipient-name" name="landmark" >
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Address</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% if (address && address.length > 0) {
+    address.forEach((address) => { %>
+<div class="modal fade" id="editModal-<%= address._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 450px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/updateUserAddress" method="post">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Username:</label>
+            <input type="text" class="form-control" id="recipient-name" name="Username" value="<%=address.userName %>">
+            <input type="hidden" name="id" value="<%= address._id %>"> 
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Mobile:</label>
+            <input type="text" class="form-control" id="recipient-name" name="number" value="<%=address.mobile %> ">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">AltrenativeMobile:</label>
+            <input type="text" class="form-control" id="recipient-name" name="AltrenativeMobile" value="<%=address.altrenativeMob %>">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">House Name:</label>
+            <input type="text" class="form-control" id="recipient-name" name="houseName" value="<%=address.houseName %>" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">City:</label>
+            <input type="text" class="form-control" id="recipient-name" name="city" value="<%=address.city %> ">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">State:</label>
+            <input type="text" class="form-control" id="recipient-name" name="state" value="<%=address.state %>">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Pincode:</label>
+            <input type="text" class="form-control" id="recipient-name" name="pincode" value="<%=address.pincode %>">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Landmark:</label>
+            <input type="text" class="form-control" id="recipient-name" name="landmark" value="<%=address.landmark %> ">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Address</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<% }); } %>
+
 <%- include('../userLayouts/accountFooter.ejs') %>
 <%- include('../userLayouts/footer.ejs') %>

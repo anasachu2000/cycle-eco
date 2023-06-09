@@ -271,48 +271,6 @@ const loadSingleProduct = async (req, res) => {
 };
 
 
-
-const loadUserdashboard = async (req,res) =>{
-  try{
-    const session = req.session.user_id;
-    const userData = await User.findById({_id:session});
-    res.render('userDashboard',{session,user:userData});
-
-  }catch(error){
-    console.log(error.message)
-  }
-} 
-
-
-const editUserDashboad = async (req,res) =>{
-  try{
-    const id = req.params.id;
-    const userData = await User.findById(req.session.user_id)
-    if(userData){
-      res.render('userDashboard',{user:userData});
-    }else{
-      res.redirect('/userdasboard');
-    }
-  }catch(error){
-    console.log(error.messaage);
-  }
-}
-
-
-const updateUserDashboard = async (req, res) => {
-  try {
-    const id = req.body.id;
-    const updateDashboard = await User.findByIdAndUpdate(id, {name: req.body.name,number: req.body.number});
-    if (updateDashboard) {
-      res.redirect('/userdasboard');
-    } else {
-      res.redirect('/userdasboard');
-    }
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
 module.exports = {
     loadHome,
     loadProducts,
@@ -325,7 +283,4 @@ module.exports = {
     insertUser,
     verifyLogin,
     userLogout,
-    loadUserdashboard,
-    editUserDashboad,
-    updateUserDashboard,
 }

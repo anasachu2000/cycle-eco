@@ -3,8 +3,8 @@ const userRoute = express();
 const auth = require('../middleware/userAuth');
 const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController');
-const addressController  = require('../controllers/addressController');
-
+const checkoutController  = require('../controllers/checkoutController');
+const addressControler  = require('../controllers/addressController')
 
 
 userRoute.set('view engine','ejs');
@@ -35,18 +35,25 @@ userRoute.post('/deletecart',cartController.deletecart);
 userRoute.get('/checkout',auth.blocked,auth.isLogin,cartController.loadcheckout);
 
 
-//------------------ Address route start
-userRoute.get('/insertAddress',auth.blocked,auth.isLogin,addressController.loadInsertAddress);
-userRoute.post('/addAddress',addressController.insertAddresss);
-userRoute.get('/editAddress',auth.blocked,auth.isLogin,addressController.editAddress);
-userRoute.post('/updateAddress',addressController.updateAddress);
-userRoute.post('/deleteAddress',addressController.deleteAddress);
+// //------------------ Address route start
+//userRoute.get('/insertAddress', auth.blocked, auth.isLogin, checkoutController.loadInsertAddress);
+//userRoute.post('/addAddress', checkoutController.insertAddresss);
+
+
+// userRoute.get('/editAddress',auth.blocked,auth.isLogin,checkoutController.editAddress);
+// userRoute.post('/updateAddress',checkoutController.updateAddress);
+// userRoute.post('/deleteAddress',checkoutController.deleteAddress);
+// userRoute.get('/showAddress',auth.blocked,auth.isLogin,checkoutController.loadAddress);
 
 
 
-userRoute.get('/userdasboard',auth.blocked,auth.isLogin,userController.loadUserdashboard);
-userRoute.get('/showAddress',auth.blocked,auth.isLogin,addressController.loadAddress);
-userRoute.get('/editUserData/:id',auth.blocked,userController.editUserDashboad);
-userRoute.post('/updateUserData',userController.updateUserDashboard);
+
+userRoute.get('/userdasboard',auth.blocked,auth.isLogin,addressControler.loadUserdashboard);
+userRoute.get('/editUserData/:id',auth.blocked,addressControler.editUserDashboad);
+userRoute.post('/updateUserData',addressControler.updateUserDashboard);
+userRoute.get('/userAddress',addressControler.loadUserAddress);
+userRoute.post('/userAddressList',addressControler.insertUserAddresss);
+userRoute.get('/editUserAddress/:id',addressControler.editUserAddress);
+userRoute.post('/updateUserAddress',addressControler.updateAddress);
 
 module.exports = userRoute; 

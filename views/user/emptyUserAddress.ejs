@@ -5,13 +5,71 @@
 <div>
   <div class="row">
     <div class="col-lg-12">
-      <p>Currently You Have No Address to Deliver Products</p>
+      <p class="text-center pb-3">Currently You Have No Address to Deliver Products</p>
     </div>
     <!-- End .col-lg-12 -->
   </div>
   <!-- End .row -->
+  <div class="d-flex justify-content-center pb-2">
+    <a  type="button" class="btn btn-outline-primary-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> Add
+        Address</a>
+  </div>
 </div>
 <!-- .End .tab-pane -->
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 450px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/userAddressList" method="post">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Username:</label>
+            <input type="text" class="form-control" id="recipient-name" name="Username" >
+            <input type="hidden" name="id" > 
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Mobile:</label>
+            <input type="text" class="form-control" id="recipient-name" name="number" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">AltrenativeMobile:</label>
+            <input type="text" class="form-control" id="recipient-name" name="AltrenativeMobile" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">House Name:</label>
+            <input type="text" class="form-control" id="recipient-name" name="houseName" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">City:</label>
+            <input type="text" class="form-control" id="recipient-name" name="city" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">State:</label>
+            <input type="text" class="form-control" id="recipient-name" name="state" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Pincode:</label>
+            <input type="text" class="form-control" id="recipient-name" name="pincode" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Landmark:</label>
+            <input type="text" class="form-control" id="recipient-name" name="landmark" >
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Address</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <%- include('../userLayouts/accountfooter.ejs') %> 
 <%-include('../userLayouts/footer.ejs') %>
