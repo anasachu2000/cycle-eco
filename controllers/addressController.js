@@ -155,6 +155,27 @@ const updateAddress = async (req,res) =>{
       console.log(error.message);
     }
   }
+
+
+  const deleteUserAddress = async (req, res) => {
+    try {
+      const id = req.session.user_id;
+      const addId = req.body.address;
+      const addressData = await Address.findOne({ userId: id });
+      if (addressData.addresses.length === 1) {
+        await Address.deleteOne({ userId: id });
+      } else {
+        await Address.updateOne(
+          { userId: id },
+          { $pull: { addresses: { _id: addId } } }
+        );
+      }
+      res.status(200).json({ message: "Address deleted successfully" });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ error: "An error occurred while deleting the address" });
+    }
+  };
   
 module.exports = {
     loadUserdashboard,
@@ -164,4 +185,5 @@ module.exports = {
     insertUserAddresss,
     editUserAddress,
     updateAddress,
+    deleteUserAddress,
 }

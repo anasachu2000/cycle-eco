@@ -55,12 +55,12 @@
                                                             </li>
                                                             <li>landmark : <%=address.landmark %>
                                                             </li>
-                                                            <a href="/editAddress/?id=<%= address._id %>">
-                                                                <button type="button" class="btn btn-outline-primary-2">
+                                                            <a>
+                                                                <button class="btn btn-outline-primary-2" data-bs-toggle="modal" data-bs-target="#editModal-<%= address._id %>">
                                                                     Edit
                                                                 </button>
                                                             </a>
-                                                            <button onclick="deleteAddress('<%= address._id %>')" type="button" class="btn btn-outline-primary-2">
+                                                            <button onclick="deleteCheckoutAddress('<%= address._id %>')" type="button" class="btn btn-outline-primary-2">
                                                                 Delete
                                                             </button>
                                                         </ul>
@@ -95,7 +95,7 @@
                                                 <h2 class="card-title">
                                                     <a role="button" data-toggle="collapse" href="#collapse-1"
                                                         aria-expanded="true" aria-controls="collapse-1">
-                                                        Direct bank transfer
+                                                        Cash on delivery
                                                     </a>
                                                 </h2>
                                             </div><!-- End .card-header -->
@@ -105,21 +105,6 @@
                                             </div><!-- End .collapse -->
                                         </div><!-- End .card -->
 
-                                        <div class="card">
-                                            <div class="card-header" id="heading-2">
-                                                <h2 class="card-title">
-                                                    <a class="collapsed" role="button" data-toggle="collapse"
-                                                        href="#collapse-2" aria-expanded="false"
-                                                        aria-controls="collapse-2">
-                                                        Check payments
-                                                    </a>
-                                                </h2>
-                                            </div><!-- End .card-header -->
-                                            <div id="collapse-2" class="collapse" aria-labelledby="heading-2"
-                                                data-parent="#accordion-payment">
-
-                                            </div><!-- End .collapse -->
-                                        </div><!-- End .card -->
 
                                         <div class="card">
                                             <div class="card-header" id="heading-3">
@@ -127,7 +112,7 @@
                                                     <a class="collapsed" role="button" data-toggle="collapse"
                                                         href="#collapse-3" aria-expanded="false"
                                                         aria-controls="collapse-3">
-                                                        Cash on delivery
+                                                        Razer pay
                                                     </a>
                                                 </h2>
                                             </div><!-- End .card-header -->
@@ -154,23 +139,6 @@
                                             </div><!-- End .collapse -->
                                         </div><!-- End .card -->
 
-                                        <div class="card">
-                                            <div class="card-header" id="heading-5">
-                                                <h2 class="card-title">
-                                                    <a class="collapsed" role="button" data-toggle="collapse"
-                                                        href="#collapse-5" aria-expanded="false"
-                                                        aria-controls="collapse-5">
-                                                        Credit Card (Stripe)
-                                                        <img src="userAssets/images/payments-summary.png"
-                                                            alt="payments cards">
-                                                    </a>
-                                                </h2>
-                                            </div><!-- End .card-header -->
-                                            <div id="collapse-5" class="collapse" aria-labelledby="heading-5"
-                                                data-parent="#accordion-payment">
-
-                                            </div><!-- End .collapse -->
-                                        </div><!-- End .card -->
                                     </div><!-- End .accordion -->
 
                                     <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
@@ -195,23 +163,23 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/" method="post">
+        <form action="/checkOutAddressList" method="post">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Username:</label>
-            <input type="text" class="form-control" id="recipient-name" name="userName" >
+            <input type="text" class="form-control" id="recipient-name" name="Username" >
             <input type="hidden" name="id" > 
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Mobile:</label>
-            <input type="text" class="form-control" id="recipient-name" name="mobile" >
+            <input type="text" class="form-control" id="recipient-name" name="number" >
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">AltrenativeMobile:</label>
-            <input type="text" class="form-control" id="recipient-name" name="altrenativeMobile" >
+            <input type="text" class="form-control" id="recipient-name" name="AltrenativeMobile" >
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">House Name:</label>
-            <input type="text" class="form-control" id="recipient-name" name="house" >
+            <input type="text" class="form-control" id="recipient-name" name="houseName" >
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">City:</label>
@@ -239,8 +207,65 @@
   </div>
 </div>
 
+
+<% if (address && address.length > 0) {
+    address.forEach((address) => { %>
+<div class="modal fade" id="editModal-<%= address._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 450px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/updatecheckoutAddress" method="post">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Username:</label>
+            <input type="text" class="form-control" id="recipient-name" name="Username" value="<%=address.userName %>">
+            <input type="hidden" name="id" value="<%= address._id %>"> 
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Mobile:</label>
+            <input type="text" class="form-control" id="recipient-name" name="number" value="<%=address.mobile %> ">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">AltrenativeMobile:</label>
+            <input type="text" class="form-control" id="recipient-name" name="AltrenativeMobile" value="<%=address.altrenativeMob %>">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">House Name:</label>
+            <input type="text" class="form-control" id="recipient-name" name="houseName" value="<%=address.houseName %>" >
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">City:</label>
+            <input type="text" class="form-control" id="recipient-name" name="city" value="<%=address.city %> ">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">State:</label>
+            <input type="text" class="form-control" id="recipient-name" name="state" value="<%=address.state %>">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Pincode:</label>
+            <input type="text" class="form-control" id="recipient-name" name="pincode" value="<%=address.pincode %>">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Landmark:</label>
+            <input type="text" class="form-control" id="recipient-name" name="landmark" value="<%=address.landmark %> ">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Address</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<% }); } %>
+
+
 <script>
-function deleteAddress(addId) {
+function deleteCheckoutAddress(addId) {
   Swal.fire({
     title: 'Are you sure?',
     text: 'You want to delete address',
@@ -252,7 +277,7 @@ function deleteAddress(addId) {
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
-        url: '/deleteAddress',
+        url: '/deleteCheckoutAddress',
         data: {
           address: addId,
         },
