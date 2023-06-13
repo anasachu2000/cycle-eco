@@ -6,6 +6,8 @@ const cartController = require('../controllers/cartController');
 const checkoutController  = require('../controllers/checkoutController');
 const addressControler  = require('../controllers/addressController')
 const orderController = require('../controllers/orderController');
+const wishlistController = require('../controllers/wishlistController');
+
 
 userRoute.set('view engine','ejs');
 userRoute.set('views','./views/user');
@@ -57,7 +59,16 @@ userRoute.get('/editUserAddress/:id',addressControler.editUserAddress);
 userRoute.post('/updateUserAddress',addressControler.updateAddress);
 userRoute.post('/deleteUserAddress',addressControler.deleteUserAddress);
 
+
+//----------------- Search and filter section start
 userRoute.post('/form',userController.searchProduct);
 userRoute.get('/filterCategory/:id',userController.filterCategory);
+
+
+
+//---------------- Wishlist section start
+userRoute.get('/wishlist',wishlistController.loadWhislist);
+userRoute.post('/addToWhislist',wishlistController.addToWhislist);
+userRoute.post('/deleteWhislist',wishlistController.deleteWhislist);
 
 module.exports = userRoute; 

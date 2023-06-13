@@ -66,13 +66,13 @@
                                     <% if (product.stockQuantity === 0) { %>
                                         <button class="btn btn-danger">Out Of Stock</button>
                                     <% } else { %>
-                                        <a onclick="addToCart('<%= product._id %>')" class="btn btn-primary text-white py-4 my-4"><span>add to cart</span></a>
+                                        <a onclick="addToCart('<%= product._id %>')" class="btn btn-primary text-white py-4 my-4"><span>Add to Cart</span></a>
                                     <% } %>
                                 <% } else { %>
                                     <button class="btn btn-primary" onclick="plzlogin()">Add To Cart</button>
                                 <% } %>
                                 <div class="details-action-wrapper">
-                                    <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                    <button onclick="addToWhislist('<%= product._id %>')" class="btn btn-dark btn-4 " title="Wishlist">Add to Wishlist</button>
                                 </div><!-- End .details-action-wrapper -->
                             </div><!-- End .product-details-action -->
                         </div><!-- End .product-details -->
@@ -127,6 +127,15 @@
                 });
             }
         });
+    }
+    function addToWhislist(wishId){
+        $.ajax({
+            url:'/addToWhislist',
+            method:'post',
+            data:{
+                wishlistId:wishId
+            },
+        })
     }
 </script>
 

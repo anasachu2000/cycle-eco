@@ -8942,7 +8942,7 @@ small.form-text {
 .table thead th,
 .table td {
   border-top: none;
-  border-bottom: 0.1rem solid #ebebeb;
+  border-bottom: 0.1rem solid #c3c3c3bf;
 }
 .table th,
 .table td {
