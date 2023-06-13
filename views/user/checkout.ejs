@@ -21,7 +21,7 @@
                                         here to enter your code</span></label>
                             </form>
                         </div><!-- End .checkout-discount -->
-                        <form action="#">
+                        <form action="#" id="checkoutForm">
                             <div class="row">
                                 <div class="col-lg-9">
                                     <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
@@ -36,7 +36,8 @@
                                                 %>
                                                 <div class="card card-dashboard">
                                                     <div class="card-body">
-                                                        <input class="form-check-input pt-5" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                                        <input class="form-check-input pt-5" type="radio" name="selectAddress" id="flexRadioDefault1"
+                                                         value="<%=address.userName %>,<%=address.mobile %>,<%=address.altrenativeMob %>,<%=address.houseName %>,<%=address.city %>,<%=address.state %>,<%=address.pincode %>,<%=address.landmark %>">
                                                         <ul>
                                                             <h3 class="card-title"> Address</h3><!-- End .card-title -->
                                                             <li>Name : <%=address.userName %>
@@ -77,68 +78,31 @@
                                         <tbody>
                                             <tr class="summary-subtotal">
                                                 <td>Subtotal:</td>
-                                                <td>₹ .00</td>
+                                                <td>₹<%= Total %>.00</td>
                                             </tr><!-- End .summary-subtotal -->
                                             <tr>
-                                                <td>Shipping:</td>
+                                                <td>Delivery charge:</td>
                                                 <td>₹ 80.00</td>
                                             </tr>
                                             <tr class="summary-total">
                                                 <td>Total:</td>
-                                                <td>₹ totalAmount.00</td>
+                                                <td >₹<span id="total"><%= totalAmount %>.00</span></td>
                                             </tr><!-- End .summary-total -->
                                         </tbody>
                                     </table><!-- End .table table-summary -->
-                                    <div class="accordion-summary" id="accordion-payment">
-                                        <div class="card">
-                                            <div class="card-header" id="heading-1">
-                                                <h2 class="card-title">
-                                                    <a role="button" data-toggle="collapse" href="#collapse-1"
-                                                        aria-expanded="true" aria-controls="collapse-1">
-                                                        Cash on delivery
-                                                    </a>
-                                                </h2>
-                                            </div><!-- End .card-header -->
-                                            <div id="collapse-1" class="collapse show" aria-labelledby="heading-1"
-                                                data-parent="#accordion-payment">
-
-                                            </div><!-- End .collapse -->
-                                        </div><!-- End .card -->
-
-
-                                        <div class="card">
-                                            <div class="card-header" id="heading-3">
-                                                <h2 class="card-title">
-                                                    <a class="collapsed" role="button" data-toggle="collapse"
-                                                        href="#collapse-3" aria-expanded="false"
-                                                        aria-controls="collapse-3">
-                                                        Razer pay
-                                                    </a>
-                                                </h2>
-                                            </div><!-- End .card-header -->
-                                            <div id="collapse-3" class="collapse" aria-labelledby="heading-3"
-                                                data-parent="#accordion-payment">
-
-                                            </div><!-- End .collapse -->
-                                        </div><!-- End .card -->
-
-                                        <div class="card">
-                                            <div class="card-header" id="heading-4">
-                                                <h2 class="card-title">
-                                                    <a class="collapsed" role="button" data-toggle="collapse"
-                                                        href="#collapse-4" aria-expanded="false"
-                                                        aria-controls="collapse-4">
-                                                        PayPal <small class="float-right paypal-link">What is
-                                                            PayPal?</small>
-                                                    </a>
-                                                </h2>
-                                            </div><!-- End .card-header -->
-                                            <div id="collapse-4" class="collapse" aria-labelledby="heading-4"
-                                                data-parent="#accordion-payment">
-
-                                            </div><!-- End .collapse -->
-                                        </div><!-- End .card -->
-
+                                    <div class="accordion-summary">
+                                      <div class="d-flex align-items-center">
+                                          <div class="mr-2">
+                                              <input type="radio" id="COD" name="payment" value="COD">
+                                          </div>
+                                          <a href="" class="d-block text-dark" for="pay1">Cash On Delivery</a>
+                                      </div>
+                                      <div class="d-flex align-items-center">
+                                          <div class="mr-2">
+                                            <input type="radio" id="onlinPayment" name="payment" value="onlinPayment">
+                                          </div>
+                                          <a href="" class="d-block text-dark">Razer Pay</a>
+                                      </div>
                                     </div><!-- End .accordion -->
 
                                     <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
@@ -147,7 +111,7 @@
                                     </button>
                                 </div><!-- End .summary -->
                             </aside><!-- End .col-lg-3 -->
-                    </div><!-- End .row -->
+                        </div><!-- End .row -->
                     </form>
                 </div><!-- End .container -->
             </div><!-- End .checkout -->
@@ -306,5 +270,104 @@ function deleteCheckoutAddress(addId) {
   });
 }
 
+
+$("#checkoutForm").submit((e) => {
+  let address = $("input[name=selectAddress]:checked").val();
+  let total = document.getElementById("total").innerHTML;
+  let cash = $("input[name=payment]:checked").val();
+  e.preventDefault();
+  $.ajax({
+      url: "/checkout",
+      method: "post",
+      data: {
+          Total: total,
+          address: address,
+          payment:cash,
+      },
+      success: (response) => {
+          if (response.codsuccess === true) {
+              swal.fire({
+                  positon: 'center',
+                  icon: "success",
+                  title: 'Order Placed Successfully',
+                  showConfirmButton: false,
+                  showCancelButton: true,
+                  cancelButtonText: "Go to Shop",
+              }).then((result) => {
+                if (result.dismiss === swal.DismissReason.cancel) {
+                  window.location.href = "/product";
+                }
+              });
+          }else{
+          razorpayPayment(response.order);
+        }
+      }
+  });
+});
+
+function razorpayPayment(order){
+  var options = {
+    "key": "rzp_test_Fi6xAYymt9QpSY", // Enter the Key ID generated from the Dashboard
+    "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Acme Corp", //your business name
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function(response) {
+       verifyPayment(response, order);
+    },
+    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+        "name": "Gaurav Kumar", //your customer's name
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+    rzp1.open();
+}
+
+function verifyPayment(payment,order){
+    const amount2 = document.getElementById("total").innerHTML;
+    $.ajax({
+      url:"/verifyPayment",
+      method:"post",
+      data:{
+        payment: payment,
+        amount2: amount2,
+        order: order
+      },
+      success:(response)=>{
+        if(response.success){
+          swal.fire({
+            positon: 'center',
+            icon: "success",
+            title: 'Order Placed Successfully',
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: "Go to Shop",
+        }).then((result) => {
+            if (result.dismiss === swal.DismissReason.cancel) {
+              window.location.href = "/product";
+            }
+          });
+        }else{
+          swal.fire({
+            positon: 'center',
+            icon: "error",
+            title: 'payment failed',
+            showConfirmButton: false,
+            timer:1500,
+        })
+        }
+      }
+    })
+  }
 </script>        
 <%- include('../userLayouts/footer.ejs') %>

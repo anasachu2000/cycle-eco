@@ -1150,7 +1150,7 @@ blockquote.text-white cite span {
   margin: 0 !important;
 }
 .header-search-extended {
-  margin-right: 19rem;
+  /* margin-right: 19rem; */
   width: 100%;
   max-width: 570px;
   margin-top: 2.2rem;

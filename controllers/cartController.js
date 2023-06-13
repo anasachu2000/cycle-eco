@@ -233,10 +233,9 @@ const deletecart  = async (req,res) =>{
     const proId = req.body.product;
     const cartData = await Cart.findOne({ userId: userData });
     if (cartData.products.length === 1) {
-       const c  = await Cart.deleteOne({ userId: userData });
-       console.log(c);
+       await Cart.deleteOne({ userId: userData });
     } else {
-      const v = await Cart.updateOne(
+        await Cart.updateOne(
         { userId: userData },
         { $pull: { products: { productId: proId } } }
       );

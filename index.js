@@ -31,7 +31,7 @@ app.use(express.json());
 
 
 const morgan = require('morgan');
-app.use(morgan('tiny'));
+//app.use(morgan('tiny'));
 
 
 //--------User route-------------//

@@ -21,10 +21,10 @@ paymentId:{
     type:String
 },
 products: [{
-    productid:{
+    productId:{
         type:String,
         required:true,
-        ref:"product"
+        ref:"Product"
     },
     count:{
         type:Number,

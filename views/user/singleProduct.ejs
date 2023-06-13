@@ -58,12 +58,19 @@
                             <div class="product-content">
                                 <p><%= product.description %></p>
                             </div><!-- End .product-content -->
+                            <div class="product-content">
+                                <h6>Quantity:<%= product.stockQuantity %></h6>
+                            </div><!-- End .product-content -->
                             <div class="product-details-action">
                                 <% if (session != null) { %>
-                                <a  onclick="addToCart('<%= product._id %>')" class="btn btn-primary text-white py-4 my-4"><span>add to cart</span></a>
+                                    <% if (product.stockQuantity === 0) { %>
+                                        <button class="btn btn-danger">Out Of Stock</button>
+                                    <% } else { %>
+                                        <a onclick="addToCart('<%= product._id %>')" class="btn btn-primary text-white py-4 my-4"><span>add to cart</span></a>
+                                    <% } %>
                                 <% } else { %>
                                     <button class="btn btn-primary" onclick="plzlogin()">Add To Cart</button>
-                                <% } %>  
+                                <% } %>
                                 <div class="details-action-wrapper">
                                     <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
                                 </div><!-- End .details-action-wrapper -->

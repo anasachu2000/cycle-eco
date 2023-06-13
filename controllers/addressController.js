@@ -69,7 +69,6 @@ const loadUserdashboard = async (req,res) =>{
 const insertUserAddresss = async (req,res)=>{
     try {
       const addressDetails = await Address.findOne({userId:req.session.user_id});
-      console.log(addressDetails);
      if(addressDetails){
       const updateOne = await Address.updateOne({userId:req.session.user_id},{$push:{addresses:{
               userName:req.body.Username,
@@ -99,8 +98,7 @@ const insertUserAddresss = async (req,res)=>{
               state:req.body.state,
               pincode:req.body.pincode,
           }]
-      })  
-      console.log(address);    
+      })    
       const addressData = await address.save();
       if(addressData){
       res.redirect('/userAddress');
@@ -135,7 +133,6 @@ const updateAddress = async (req,res) =>{
     try{
       const session = req.session.user_id;
       const id = req.body.id;
-      console.log(id);
       const address = await Address.updateOne({ userId: session }, { $pull: { addresses: { _id: id } } });
       const pushAddress = await Address.updateOne({userId:session},
         {$push:

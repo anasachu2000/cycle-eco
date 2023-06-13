@@ -271,6 +271,54 @@ const loadSingleProduct = async (req, res) => {
 };
 
 
+
+const searchProduct = async (req,res)=>{
+  try{
+     const search = req.body.search;
+     const session = req.session.user_id;
+     const userData = await User.find({})
+     const categoryData = await Category.find({is_delete:false});
+     const productData = await Product.find(
+     {$or: [
+      {productName:{$regex:".*" + search + ".*", $options:'i'}},
+      {brand:{$regex:".*" + search + ".*", $options:'i'}},
+      {category:{$regex:".*" + search + ".*", $options:'i'}},]}
+      );
+     
+     if(productData.length > 0){
+      res.render('product',{session,category:categoryData,product:productData,user:userData});
+     }else{
+      res.render('product',{session,category:categoryData,product:productData,user:userData});
+     }
+
+  }catch(error){
+    console.log(error.message);
+  }
+}
+
+
+const filterCategory = async (req,res)=>{
+  try{
+    const id = req.params.id;
+    const session = req.session.user_id;
+    const categoryData = await Category.find({is_delete:false});
+    const userData = await User.find({})
+    const productData = await Product.find({category:id,is_delete:false})
+    console.log(productData)
+    if(categoryData.length > 0){
+      res.render('product',{product:productData,session,category:categoryData,user:userData});
+    }else{
+      res.render('product',{product:[],session,category:categoryData,user:userData});
+      
+    }
+
+
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+
 module.exports = {
     loadHome,
     loadProducts,
@@ -283,4 +331,6 @@ module.exports = {
     insertUser,
     verifyLogin,
     userLogout,
+    searchProduct,
+    filterCategory,
 }

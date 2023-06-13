@@ -5,7 +5,7 @@ const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController');
 const checkoutController  = require('../controllers/checkoutController');
 const addressControler  = require('../controllers/addressController')
-
+const orderController = require('../controllers/orderController');
 
 userRoute.set('view engine','ejs');
 userRoute.set('views','./views/user');
@@ -35,12 +35,15 @@ userRoute.post('/changeQuantity',cartController.changeProductCount);
 userRoute.post('/deletecart',cartController.deletecart);
 
 
+
 //------------------ Checkout route start
 userRoute.get('/checkout',auth.blocked,auth.isLogin,checkoutController.loadcheckout);
 userRoute.post('/checkOutAddressList',checkoutController.insertCheckoutAddresss);
 userRoute.get('/editcheckoutAddress/:id',checkoutController.editCheckoutAddress);
 userRoute.post('/updatecheckOutAddress',checkoutController.updateCheckoutAddress);
 userRoute.post('/deleteCheckoutAddress',checkoutController.deleteCheckoutAddress);
+userRoute.post('/checkout',orderController.placeOrder);
+userRoute.post('/verifyPayment',orderController.verifyPayment);
 
 
 
@@ -54,5 +57,7 @@ userRoute.get('/editUserAddress/:id',addressControler.editUserAddress);
 userRoute.post('/updateUserAddress',addressControler.updateAddress);
 userRoute.post('/deleteUserAddress',addressControler.deleteUserAddress);
 
+userRoute.post('/form',userController.searchProduct);
+userRoute.get('/filterCategory/:id',userController.filterCategory);
 
 module.exports = userRoute; 
