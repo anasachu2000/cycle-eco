@@ -7,21 +7,21 @@ const path = require('path')
 
 
 //------------ productlist view section
-const loadProductlist = async(req,res)=>{
+const loadProductlist = async(req,res,next)=>{
     try{
         const categoryData = await Category.find({})
         const adminData = await User.findById({ _id: req.session.auser_id})
         const productData = await Product.find({is_delete:false});
         res.render('productList',{admin:adminData,activePage: 'productList',category:categoryData,product:productData});
-    }catch(error){
-        console.log(error.message);
+    }catch(err){
+      next(err);
     }
 }
 
 
 
 //------------- product data storing section
-const insertProduct = async (req, res) => {
+const insertProduct = async (req,res,next) => {
     try {
         const images = [];
         if (req.files && req.files.length > 0) {
@@ -52,44 +52,44 @@ const insertProduct = async (req, res) => {
       }else{
         return res.redirect("/admin/productList");
       }
-    } catch (error) {
-        console.log(error.message);
+    } catch (err) {
+      next(err);
     }
 };
 
 
 
 // ------------ Delete product section
-const deleteProduct = async (req,res)=> {
+const deleteProduct = async (req,res,next)=> {
   try{
     const id = req.query.id; 
     const product =   await Product.updateOne({ _id: id }, { $set: { is_delete: true } });
     res.redirect('/admin/productList');
 
-  }catch(error){
-    console.log(error.message);
+  }catch(err){
+    next(err);
   }
 }
 
 
 
 //  ------------- Edit product  section
-const editproduct = async(req,res) => {
+const editproduct = async(req,res,next) => {
     try {
       const id = req.params.id
       const productData = await Product.findOne({_id:id}).populate('category')
       const categoryData = await Category.find({is_delete:false})
       const adminData = await User.findById({_id:req.session.auser_id})
        res.render('editProductList',{admin:adminData,activePage: 'productList',category:categoryData,product:productData})
-    } catch (error) {
-        console.log(error.message);
+    } catch (err) {
+      next(err);
     }
 }
 
 
 
 //  ------------- Update product  section
-const updateProduct = async (req,res) =>{
+const updateProduct = async (req,res,next) =>{
   if(req.body.productName.trim() === "" || req.body.category.trim() === "" || req.body.description.trim() === "" || req.body.StockQuantity.trim() === "" || req.body.price.trim() === "") {
       const id = req.params.id
       const productData = await Product.findOne({_id:id}).populate('category')
@@ -112,8 +112,8 @@ const updateProduct = async (req,res) =>{
               brand:req.body.brand
           }})
           res.redirect('/admin/productList')
-      } catch (error) {
-          console.log(error.message);
+      } catch (err) {
+        next(err);
       }
   }
 }
@@ -121,22 +121,22 @@ const updateProduct = async (req,res) =>{
 
 
 //  ------------- Delete image section
-const deleteimage = async(req,res)=>{
+const deleteimage = async(req,res,next)=>{
   try{
     const imgid = req.params.imgid;
     const prodid = req.params.prodid;
     fs.unlink(path.join(__dirname,"../public/adminAssets/adminImages",imgid),()=>{})
     const productimg  = await  Product.updateOne({_id:prodid},{$pull:{image:imgid}})
     res.redirect('/admin/editProductList/'+prodid)
-  }catch(error){
-    console.log(error.message)
+  }catch(err){
+    next(err);
   }
 }
 
 
 
 //  ------------- Update image section
-const updateimage = async (req, res) => {
+const updateimage = async (req,res,next) => {
   try {
     const id = req.params.id
     const prodata = await Product.findOne({ _id: id })
@@ -162,8 +162,8 @@ const updateimage = async (req, res) => {
     } else {
       res.redirect("/admin/editProductList/")
     }
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    next(err);
   }
 }
  

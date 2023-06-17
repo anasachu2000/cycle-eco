@@ -59,7 +59,7 @@
                                 <p><%= product.description %></p>
                             </div><!-- End .product-content -->
                             <div class="product-content">
-                                <h6>Quantity:<%= product.stockQuantity %></h6>
+                               
                             </div><!-- End .product-content -->
                             <div class="product-details-action">
                                 <% if (session != null) { %>
@@ -72,7 +72,11 @@
                                     <button class="btn btn-primary" onclick="plzlogin()">Add To Cart</button>
                                 <% } %>
                                 <div class="details-action-wrapper">
+                                    <% if(wishlist === -1){ %>
                                     <button onclick="addToWhislist('<%= product._id %>')" class="btn btn-dark btn-4 " title="Wishlist">Add to Wishlist</button>
+                                   <% }else{ %>
+                                    <a href="/deleteSingleWishlist?id=<%= product._id %>"><button class="btn btn-dark btn-4 " title="Wishlist">Allready in Wishlist</button></a>
+                                    <% } %>
                                 </div><!-- End .details-action-wrapper -->
                             </div><!-- End .product-details-action -->
                         </div><!-- End .product-details -->
@@ -135,8 +139,12 @@
             data:{
                 wishlistId:wishId
             },
+            success: (response) => {
+                location.reload();
+            }
         })
     }
+
 </script>
 
 <%- include('../userLayouts/footer.ejs') %>

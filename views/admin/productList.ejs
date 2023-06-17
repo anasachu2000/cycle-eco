@@ -145,4 +145,65 @@
 <!-- ===================== Product edit modal =================================== -->
 
 
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const imageUpload = document.getElementById("imageUpload");
+    const croppedImageCanvas = document.getElementById("croppedImage");
+    let cropper;
+
+    // Add event listener for image upload change
+    imageUpload.addEventListener("change", function (event) {
+      const file = event.target.files[0];
+
+      if (file) {
+        // Read the uploaded file
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          // Create an image element
+          const img = new Image();
+          img.src = e.target.result;
+          img.onload = function () {
+            // Initialize Cropper.js
+            if (cropper) {
+              cropper.replace(img.src);
+            } else {
+              cropper = new Cropper(img, {
+                aspectRatio: 1, // Set the aspect ratio as needed
+                viewMode: 1, // Set the view mode as needed (0 - none, 1 - preview, 2 - crop)
+              });
+            }
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Add event listener for the modal close event
+    $('#exampleModal').on('hidden.bs.modal', function () {
+      if (cropper) {
+        cropper.destroy();
+        cropper = null;
+      }
+    });
+
+    // Add event listener for the form submit event
+    $('form').on('submit', function (event) {
+      event.preventDefault();
+
+      if (cropper) {
+        // Get the cropped image data
+        const croppedCanvas = cropper.getCroppedCanvas();
+        const croppedImageData = croppedCanvas.toDataURL();
+
+        // Set the cropped image data as the value of the hidden canvas field
+        croppedImageCanvas.value = croppedImageData;
+
+        // Submit the form
+        this.submit();
+      }
+    });
+  });
+</script>
+
 <%- include('../adminLayouts/footer.ejs') %>

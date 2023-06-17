@@ -5,7 +5,7 @@ const Cart = require('../models/cartModel');
 
 
 // ---------- Checkout loading section
-const loadcheckout = async(req,res)=>{
+const loadcheckout = async(req,res,next)=>{
     try {
       const session = req.session.user_id
       const userData = await User.findOne ({_id:req.session.user_id});
@@ -38,17 +38,17 @@ const loadcheckout = async(req,res)=>{
         }else{
           res.redirect('/')
         }
-    } catch (error) {
-      console.log(error.message);
+    } catch (err) {
+      next(err);
     }
   }
 
 
 
-const insertCheckoutAddresss = async (req,res)=>{
+const insertCheckoutAddresss = async (req,res,next)=>{
     try {
       const addressDetails = await Address.findOne({userId:req.session.user_id});
-      console.log(addressDetails);
+
      if(addressDetails){
       const updateOne = await Address.updateOne({userId:req.session.user_id},{$push:{addresses:{
               userName:req.body.Username,
@@ -78,8 +78,7 @@ const insertCheckoutAddresss = async (req,res)=>{
               state:req.body.state,
               pincode:req.body.pincode,
           }]
-      })  
-      console.log(address);    
+      })     
       const addressData = await address.save();
       if(addressData){
       res.redirect('/checkout');
@@ -88,15 +87,15 @@ const insertCheckoutAddresss = async (req,res)=>{
   
   }
   }
-  } catch (error) {
-      console.log(error.message);
+  } catch (err) {
+    next(err);
   }
-  }
+}
 
 
 
 //-------- Edit address section  -----------//
-const editCheckoutAddress = async (req,res)=>{
+const editCheckoutAddress = async (req,res,next)=>{
     try {
      const id = req.params.id;
      const session = req.session.user_id;
@@ -104,18 +103,17 @@ const editCheckoutAddress = async (req,res)=>{
      const addressData = await Address.findOne({userId:session},{addresses:{$elemMatch:{_id:id}}});
      const address = addressData.addresses;
      res.render('checkout',{address:address[0],session:session,user:user}) ;
-    } catch (error) {
-      console.log(error.message);
+    } catch (err) {
+      next(err);
     }
   }
 
 
   //-------- Update address section  -----------//
-const updateCheckoutAddress = async (req,res) =>{
+const updateCheckoutAddress = async (req,res,next) =>{
     try{
       const session = req.session.user_id;
       const id = req.body.id;
-      console.log(id);
       const address = await Address.updateOne({ userId: session }, { $pull: { addresses: { _id: id } } });
       const pushAddress = await Address.updateOne({userId:session},
         {$push:
@@ -131,13 +129,13 @@ const updateCheckoutAddress = async (req,res) =>{
           }
         }})
         res.redirect('/checkout')
-    }catch(error){
-      console.log(error.message);
+    }catch(err){
+      next(err);
     }
   }
 
 
-  const deleteCheckoutAddress = async (req, res) => {
+  const deleteCheckoutAddress = async (req,res,next) => {
     try {
       const id = req.session.user_id;
       const addId = req.body.address;
@@ -151,9 +149,8 @@ const updateCheckoutAddress = async (req,res) =>{
         );
       }
       res.status(200).json({ message: "Address deleted successfully" });
-    } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ error: "An error occurred while deleting the address" });
+    } catch (err) {
+      next(err);
     }
   };
 

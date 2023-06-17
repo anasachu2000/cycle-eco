@@ -5,7 +5,7 @@ const Cart = require('../models/cartModel')
 
 
 // ---------- Cart loading section start
-const loadCart = async(req,res)=>{
+const loadCart = async(req,res,next)=>{
   try {
     let id = req.session.user_id;
     const session = req.session.user_id
@@ -40,71 +40,14 @@ const loadCart = async(req,res)=>{
     } else {
       res.redirect("/login");
     }
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    next(err);
   }
 }
        
  
 
-// ---------- Add to cart section start
-// const addToCart = async (req,res)=>{
-//   try{
-//     const userId = req.session.user_id;
-//     const userData = await User.findOne({_id:userId});
-//     const productId = req.body.id;
-//     const productData = await Product.findOne({_id:productId});
-//     const cartData = await Cart.findOne({userId:userData._id});
-
-//     if(cartData){
-//       const productExists = cartData.products.some(
-//         (product)=>product.productId == productId
-//       )
-//       if(productExists){
-//         await Cart.findOneAndUpdate({
-//           userId:userId,
-//           'products.productId':productId
-//         },
-//         {
-//           $inc: {'products.$.count':1,
-//             'products.$.totalPrice':productData.price
-//         }
-//         })
-//       }else{
-//         await Cart.findOneAndUpdate(
-//           { userId: userId },
-//           {
-//             $push: {
-//               products: {
-//                 productId: productId,
-//                 productPrice: productData.price,
-//                 totalPrice:productData.price,
-//               },
-//             },
-//           }
-//         );        
-//       }
-//     }else{
-//       const newCart = new Cart({
-//         userId:userData._id,
-//         userName:userData.name,
-//         products:[{
-//           productId:productData._id,
-//           productPrice:productData.price,
-//           totalPrice:productData.price,
-//         }]
-//       })
-//       await newCart.save();
-//     }
-//     res.json({success:true})
-//   }catch(error){
-//     console.log(error.message);
-//     res.status(500).json({ success: false, message: "Server Error" });
-//   }
-// }
-
-
-const addToCart = async (req, res) => {
+const addToCart = async (req,res,next) => {
   try {
     const userId = req.session.user_id;
     const userData = await User.findOne({ _id: userId });
@@ -157,16 +100,15 @@ const addToCart = async (req, res) => {
     }
 
     res.json({ success: true });
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ success: false, message: "Server Error" });
+  } catch (err) {
+    next(err);
   }
 };
 
 
 
 // ---------- Change product quantity in cart section
-const changeProductCount = async (req, res) => {
+const changeProductCount = async (req,res,next) => {
   try {
     const userData = req.session.user_id;
     const proId = req.body.product;
@@ -214,20 +156,17 @@ const changeProductCount = async (req, res) => {
     await Cart.updateOne(
       { userId: userData, "products.productId": proId },
       { $set: { "products.$.totalPrice": price } }
-    );
-  
-    
+    ); 
     res.json({ success: true });
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ success: false, error: error.message });
+  } catch (err) {
+    next(err);
   }
 };
 
 
 
 // ---------- delete cart section
-const deletecart  = async (req,res) =>{
+const deletecart  = async (req,res,next) =>{
   try {
     const userData = req.session.user_id;
     const proId = req.body.product;
@@ -241,9 +180,8 @@ const deletecart  = async (req,res) =>{
       );
     }
     res.json({ success: true });
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ success: false, error: error.message });
+  } catch (err) {
+    next(err);
   }
 }
 

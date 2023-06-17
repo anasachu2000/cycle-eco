@@ -5,21 +5,20 @@ let message = '';
 
 
 // ----------- category view section
-const loadCategory = async (req, res) => {
+const loadCategory = async (req, res,next) => {
   try {
     const adminData = await User.findById(req.session.auser_id);  
     const categoryData = await Category.find({is_delete:false});
     res.render('categoryList', { admin: adminData, activePage: 'categoryList', category: categoryData, message: message || '' });
-  } catch (error) {
-    console.log(error.message);
-    res.render('categoryList', { message: message || '' });
+  } catch (err) {
+    next(err)
   }
 };
 
 
 
 // ---------- Category data storing section  
-const insertCategory = async (req, res) => {
+const insertCategory = async (req, res,next) => {
   try {
     const name = upperCase.upperCase(req.body.name.trim());
     const existingCategory = await Category.findOne({ categoryName: name });
@@ -43,17 +42,15 @@ const insertCategory = async (req, res) => {
       message = 'Something went wrong';
       res.redirect('/admin/categoryList');
     }
-  } catch (error) {
-    console.log(error.message);
-    message = 'something went wrong';
-    res.redirect('/admin/categoryList');
+  } catch (err) {
+    next(err)
   }
 };
 
 
 
 //  ------------- Edit category section
-const editCategory = async (req, res) => {
+const editCategory = async (req, res,next) => {
   try {
     const id = req.params.id;
     const adminData = await User.findById(req.session.auser_id);
@@ -67,15 +64,15 @@ const editCategory = async (req, res) => {
     } else {
       res.redirect('/admin/categoryList');
     }
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    next(err)
   }
 };
 
 
 
 //  --------------- Update category section
-const updateCategory = async (req, res) => {
+const updateCategory = async (req,res,next) => {
   try {
     const id = req.body.id;
     const updatedCategoryName = upperCase.upperCase(req.body.categoryName.trim());
@@ -93,23 +90,21 @@ const updateCategory = async (req, res) => {
       message = 'failed to update category';
       res.redirect('/admin/categoryList');
     }
-  } catch (error) {
-    console.log(error.message);
-    message = 'something went wrong';
-    res.redirect('/admin/categoryList');
+  } catch (err) {
+    next(err)
   }
 };
 
 
 
 //-------------- Delete category section
-let deleteCategory = async (req, res) => {
+let deleteCategory = async (req, res,next) => {
   try {
     const id = req.query.id; // Use req.params.id to retrieve the category ID
     const category =   await Category.updateOne({ _id: id }, { $set: { is_delete: true } });
     res.redirect('/admin/categoryList');
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    next(err);
   }
 }
 

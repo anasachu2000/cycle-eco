@@ -1,0 +1,46 @@
+<%- include('../userLayouts/header.ejs') %>
+<%- include('../userLayouts/navbar.ejs') %>
+<%- include('../userLayouts/accountSidebar.ejs') %>
+
+<div class="page-content">
+  <div class="">
+    <table class="table table-wishlist table-mobile">
+      <thead>
+        <tr>
+          <th class="px-4">Order ID</th>
+          <th>Order date</th>
+          <th>Amount</th>
+          <th>Method</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(orders.length > 0){
+            orders.forEach((order)=>{
+              %>
+            <tr>
+              
+            
+              <td class="price-col px-4"><%= order._id %></td>
+              <td class="price-col"><%= order.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %></td>
+              <td class="price-col"><%= order.totalAmount %></td>
+              <td class="price-col"><%= order.paymentMethod %></td>
+              <td class="price-col">
+                <a class="btn btn-outline-primary-2" href="/viewOrder">VIEW</a>
+              </td>
+            </tr>
+          <% });
+        } else { %>
+          <tr>
+            <td colspan="6">
+              <h2 class="text-danger text-center text-dark py-5">No items in wishlist</h2>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table><!-- End .table table-wishlist -->
+  </div><!-- End .container -->
+</div><!-- End .page-content -->
+
+<%- include('../userLayouts/accountFooter.ejs') %>
+<%- include('../userLayouts/footer.ejs') %>

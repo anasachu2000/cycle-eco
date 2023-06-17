@@ -3,10 +3,10 @@ const User = require('../models/userModel');
 const Wishlist = require('../models/wishlistModel');
 
 
-const loadWhislist = async (req,res)=>{
+const loadWhislist = async (req,res,next)=>{
     try{
         const session = req.session.user_id;
-        const userData = await User.find({})
+        const userData = await User.findById({_id:req.session.user_id});
         const wishlistData = await Wishlist.find({userId:session}).populate('products.productId');
 
         if(wishlistData.length > 0){
@@ -17,15 +17,15 @@ const loadWhislist = async (req,res)=>{
             res.render('wishlist',{session,user:userData,wishlist:[],products:[]});
         }
        
-    }catch(error){
-        console.log(error.message);
+    }catch(err){
+      next(err);
     }
 }
 
 
   
 
-const addToWhislist = async (req, res) => {
+const addToWhislist = async (req,res,next) => {
     try {
       const id = req.body.wishlistId;
       const session = req.session.user_id;
@@ -33,18 +33,19 @@ const addToWhislist = async (req, res) => {
       const wishlistData = await Wishlist.findOne({ userId: session });
 
       if (wishlistData) {
-        console.log(wishlistData)
         const checkWishlist = await wishlistData.products.findIndex(
           (wish) => wish.productId == id
         );
+        console.log(checkWishlist)
       
         if (checkWishlist !== -1) {
-          res.redirect('/singleProduct')
+          res.json({check:true});
         } else {
           await Wishlist.updateOne(
             { userId: session },
             { $push: { products: { productId: id } } }
           );
+          res.json({ success: true });
         }
       } else {
         const wishlist = new Wishlist({
@@ -57,15 +58,18 @@ const addToWhislist = async (req, res) => {
           ],
         });
         const wish = await wishlist.save();
+        if (wish) {
+          res.json({ success: true });
+        }
       }
-    } catch (error) {
-      console.log(error.message);
+    } catch (err) {
+      next(err);
     }
   };
   
 
-
-  const deleteWhislist = async (req,res) =>{
+  
+  const deleteWhislist = async (req,res,next) =>{
     try{
         const id = req.body.deleteId;
         const session = req.session.user_id;
@@ -76,12 +80,30 @@ const addToWhislist = async (req, res) => {
         }else{
             res.json({success:true});
         }
-    }catch(error){
-        console.log(error);
+    }catch(err){
+      next(err);
     }
   }
+
+
+  const deleteSingleWishlist = async (req,res,next)=>{
+    try{
+      const id = req.query.id;
+      console.log(id)
+      const session = req.session.user_id;
+      const wishlistData = await Wishlist.findOneAndUpdate({userId:session},{$pull:{products:{productId:id}}});
+      if(wishlistData){
+        res.redirect('/singleProduct?id=' + id);
+      }
+
+    }catch(err){
+      next(err);
+    }
+  }
+ 
 module.exports = {
     loadWhislist,
     addToWhislist,
     deleteWhislist,
+    deleteSingleWishlist
 }

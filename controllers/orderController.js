@@ -11,7 +11,7 @@ var instance = new razorpay({
 });
 
 
-const placeOrder = async (req, res) => {
+const placeOrder = async (req,res,next) => {
     try {
       const id = req.session.user_id;
       const userName = await User.findOne({ _id: id });
@@ -59,14 +59,14 @@ const placeOrder = async (req, res) => {
       }else{
         res.redirect('/')
       }
-    } catch (error) {
-      console.log(error); 
+    } catch (err) {
+      next(err);
     }
   };
   
 
 
-const verifyPayment = async (req,res)=>{
+const verifyPayment = async (req,res,next)=>{
   try{
     const details = req.body
 
@@ -85,8 +85,8 @@ const verifyPayment = async (req,res)=>{
       await Order.findByIdAndRemove({_id:details.order.receipt});
       res.json({success:false});
     }
-  }catch(error){
-      console.log(error.message)
+  }catch(err){
+    next(err);
   }
 }
 
