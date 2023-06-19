@@ -75,7 +75,7 @@
                                     <% if(wishlist === -1){ %>
                                     <button onclick="addToWhislist('<%= product._id %>')" class="btn btn-dark btn-4 " title="Wishlist">Add to Wishlist</button>
                                    <% }else{ %>
-                                    <a href="/deleteSingleWishlist?id=<%= product._id %>"><button class="btn btn-dark btn-4 " title="Wishlist">Allready in Wishlist</button></a>
+                                    <a href="/deleteSingleWishlist/<%= product._id %>"><button class="btn btn-dark btn-4 " title="Wishlist">Allready in Wishlist</button></a>
                                     <% } %>
                                 </div><!-- End .details-action-wrapper -->
                             </div><!-- End .product-details-action -->

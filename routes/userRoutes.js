@@ -60,7 +60,7 @@ userRoute.get('/editUserAddress/:id',auth.blocked,auth.isLogin,addressControler.
 userRoute.post('/updateUserAddress',addressControler.updateAddress);
 userRoute.post('/deleteUserAddress',addressControler.deleteUserAddress);
 userRoute.get('/UserOrder',auth.blocked,auth.isLogin,addressControler.loadeUserOrder);
-userRoute.get('/viewOrder',addressControler.loadViewOrder);
+userRoute.get('/viewOrder/:id',addressControler.loadViewOrder);
 
 
 //----------------- Search and filter section start
@@ -73,7 +73,7 @@ userRoute.get('/priceSort/:id',userController.priceSort);
 userRoute.get('/wishlist',auth.blocked,auth.isLogin,wishlistController.loadWhislist);
 userRoute.post('/addToWhislist',wishlistController.addToWhislist);
 userRoute.post('/deleteWhislist',wishlistController.deleteWhislist);
-userRoute.get('/deleteSingleWishlist',wishlistController.deleteSingleWishlist);
+userRoute.get('/deleteSingleWishlist/:id',wishlistController.deleteSingleWishlist);
 
 userRoute.use(errorHandler);
 

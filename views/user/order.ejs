@@ -26,7 +26,7 @@
               <td class="price-col"><%= order.totalAmount %></td>
               <td class="price-col"><%= order.paymentMethod %></td>
               <td class="price-col">
-                <a class="btn btn-outline-primary-2" href="/viewOrder">VIEW</a>
+                <a class="btn btn-outline-primary-2" href="/viewOrder/<%= order._id %>">Details</a>
               </td>
             </tr>
           <% });

@@ -12,51 +12,7 @@
                     </div><!-- End .intro-slide -->
                 </div><!-- End .intro-slider owl-carousel owl-theme -->
             </div><!-- End .intro-slider-container -->
-            <div class="container py-5">
-                <div class="banner-group">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="banner banner-border">
-                                <a href="/product">
-                                    <img src="userAssets/images/demos/demo-5/banners/banner-1.jpg" alt="Banner">
-                                </a>
-
-                                <div class="banner-content">
-                                    <h4 class="banner-subtitle"><a href="/product">Trending now</a></h4><!-- End .banner-subtitle -->
-                                    <h3 class="banner-title"><a href="/product"><span>This Week's<br>Most Wanted</span></a></h3><!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-primary-2 banner-link">Discover Now<i class="icon-long-arrow-right"></i></a>
-                                </div><!-- End .banner-content -->
-                            </div><!-- End .banner -->
-                        </div><!-- End .col-md-6-->
-
-                        <div class="col-md-6">
-                            <div class="banner banner-border-hover">
-                                <a href="#">
-                                    <img src="userAssets/images/demos/demo-5/banners/banner-2.jpg" alt="Banner">
-                                </a>
-
-                                <div class="banner-content">
-                                    <h4 class="banner-subtitle"><a href="#">Limited time only.</a></h4><!-- End .banner-subtitle -->
-                                    <h3 class="banner-title"><a href="#"><span>Trainers & Sportwear<br>Sale Up to 70% off</span></a></h3><!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-primary-2 banner-link">Shop Now<i class="icon-long-arrow-right"></i></a>
-                                </div><!-- End .banner-content -->
-                            </div><!-- End .banner -->
-
-                            <div class="banner banner-border-hover">
-                                <a href="#">
-                                    <img src="userAssets/images/demos/demo-5/banners/banner-3.jpg" alt="Banner">
-                                </a>
-
-                                <div class="banner-content">
-                                    <h4 class="banner-subtitle"><a href="#">This week we love...</a></h4><!-- End .banner-subtitle -->
-                                    <h3 class="banner-title"><a href="#"><span>Womens <br>Holiday Clothes</span></a></h3><!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-primary-2 banner-link">Discover Now<i class="icon-long-arrow-right"></i></a>
-                                </div><!-- End .banner-content -->
-                            </div><!-- End .banner -->
-                        </div><!-- End .col-md-6 -->
-                    </div><!-- End .row -->
-                </div><!-- End .banner-group -->
-            </div><!-- End .container -->
+           
 
             <div class="mb-4"></div><!-- End .mb-6 -->
 
@@ -65,69 +21,47 @@
                     <h2 class="title">Trendy Products</h2><!-- End .title -->
                 </div><!-- End .heading -->
 
-                <div class="tab-content tab-content-carousel">
-                    <div class="tab-pane p-0 fade show active" id="trendy-all-tab" role="tabpanel" aria-labelledby="trendy-all-link">
-                        <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
-                            data-owl-options='{
-                                "nav": false, 
-                                "dots": true,
-                                "margin": 20,
-                                "loop": false,
-                                "responsive": {
-                                    "0": {
-                                        "items":2
-                                    },
-                                    "480": {
-                                        "items":2
-                                    },
-                                    "768": {
-                                        "items":3
-                                    },
-                                    "992": {
-                                        "items":4
-                                    },
-                                    "1200": {
-                                        "items":4,
-                                        "nav": true
-                                    }
+                <div class="tab-content">
+                    <div class="tab-pane p-0 fade show active" id="new-all-tab" role="tabpanel" aria-labelledby="new-all-link">
+                        <div class="products">
+                            <div class="row justify-content-center">
+                                <%
+                                if(product.length > 0){
+                                    for(let i = 0; i < product.length;i++){
+                                        %>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="product product-2">
+                                        <figure class="product-media">
+                                            <a href="/product">
+                                                <img src="/adminAssets/adminImages/<%= product[i].image[0] %>" alt="Product image" class="product-image">
+                                            </a>
+
+                                            <div class="product-action-vertical">
+                                                <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"><span>add to wishlist</span></a>
+                                            </div><!-- End .product-action -->
+
+                                            <div class="product-action product-action-transparent">
+                                                <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="/product"><%= product[i].category%></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="/product"><%= product[i].productName%></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                <span class="new-price">₹<%=product[i].price%></span>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div><!-- End .product -->
+                                </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                                <%
+                            }
                                 }
-                            }'>
-                            <%
-                            if (product.length > 0) {
-                                for(let i = 0;i < product.length;i++){
-                              %>
-                              <div id="product-container">
-                            <div class="product product-2">
-                                <figure class="product-media">
-                                    <a href="/product" >
-                                        <img  src="/adminAssets/adminImages/<%=product[i].image[0]%>" alt="Product image" class="product-image">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="/product" class="btn-product-icon btn-wishlist btn-expandable" title="Add to wishlist"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action -->
-
-                                    <div class="product-action product-action-transparent">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="/product"><%= product[i].category%></a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html"><%= product[i].productName%></a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        ₹<%=product[i].price%>
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                            </div>
-                            <%
-                             }
-                             } 
-                             %>
-                        </div><!-- End .owl-carousel -->
+                                %>
+                            </div><!-- End .row -->
+                        </div><!-- End .products -->
                     </div><!-- .End .tab-pane -->
                     <div class="tab-pane p-0 fade" id="trendy-women-tab" role="tabpanel" aria-labelledby="trendy-women-link">
                         <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
@@ -217,12 +151,6 @@
             </div><!-- End .container -->
 
             <div class="mb-5"></div><!-- End .mb-5 -->
-
-            <div class="video-banner video-banner-bg bg-image text-center" style="background-image: url(userAssets/images/demos/demo-5/3.jpg)">
-                <div class="container">
-                    <h3 class="video-banner-title h1 text-white"><span>New Collection</span><strong>Winter’19 <i>/</i> Spring’20</strong></h3><!-- End .video-banner-title -->
-                </div><!-- End .container -->
-            </div><!-- End .video-banner bg-image -->
 
             <div class="pt-6 pb-6" style="background-color: #fff;">
                 <div class="container">

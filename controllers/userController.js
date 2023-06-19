@@ -62,7 +62,7 @@ let email
 const schema = new passwordValidator();
 schema
   .is().min(8)
-  .is().max(100)
+  .is().max(16)
   .has().uppercase()
   .has().lowercase()
   .has().digits(1)
@@ -266,8 +266,8 @@ const loadProducts = async (req,res,next)=>{
 const loadSingleProduct = async (req,res,next) => {
   try {
     if (req.session.user_id) {
-     const session = req.session.user_id
-     const id = req.params.id
+      const session = req.session.user_id
+      const id = req.params.id
       const productData = await Product.findOne({ _id: id });
       const userData = await User.findById({_id: req.session.user_id})
       const wishlistData = await Wishlist.find({userId:session});

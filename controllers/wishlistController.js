@@ -36,7 +36,6 @@ const addToWhislist = async (req,res,next) => {
         const checkWishlist = await wishlistData.products.findIndex(
           (wish) => wish.productId == id
         );
-        console.log(checkWishlist)
       
         if (checkWishlist !== -1) {
           res.json({check:true});
@@ -86,20 +85,22 @@ const addToWhislist = async (req,res,next) => {
   }
 
 
-  const deleteSingleWishlist = async (req,res,next)=>{
-    try{
-      const id = req.query.id;
-      console.log(id)
+  const deleteSingleWishlist = async (req, res, next) => {
+    try {
+      const id = req.params.id;
       const session = req.session.user_id;
-      const wishlistData = await Wishlist.findOneAndUpdate({userId:session},{$pull:{products:{productId:id}}});
-      if(wishlistData){
-        res.redirect('/singleProduct?id=' + id);
+      const wishlistData = await Wishlist.findOneAndUpdate(
+        { userId: session },
+        { $pull: { products: { productId: id } } }
+      );
+      if (wishlistData) {
+        res.redirect('/singleProduct/' + id);
       }
-
-    }catch(err){
+    } catch (err) {
       next(err);
     }
-  }
+  };
+  
  
 module.exports = {
     loadWhislist,

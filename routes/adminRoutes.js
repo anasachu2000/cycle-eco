@@ -47,6 +47,9 @@ adminRoute.post("/editProductList/updateimage/:id",update.upload.array('image'),
 
 //---------------- ORDER LIST SECTION START
 adminRoute.get('/orderList',adminOrderController.loadOrderList);
+adminRoute.get('/singleOrderList/:id',adminOrderController.loadSingleOrderList)
+
+
 
 adminRoute.get('*',(req,res)=>{
   res.redirect('/admin')

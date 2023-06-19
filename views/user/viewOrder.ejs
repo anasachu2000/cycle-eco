@@ -1,69 +1,87 @@
 <%- include('../userLayouts/header.ejs') %>
 <%- include('../userLayouts/navbar.ejs') %>
 
-<div class="container">
-    <div class="row">
-        <div class="col-4">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="..." class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<main class="main">
+  <nav aria-label="breadcrumb" class="breadcrumb-nav">
+      <div class="container">
+          <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/home">Home</a></li>
+              <li class="breadcrumb-item"><a href="/UserOrder">Order</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Order Details</li>
+          </ol>
+      </div><!-- End .container -->
+  </nav><!-- End .breadcrumb-nav -->
+<div>
+  <div class="d-flex justify-content-center">
+          <div class="card card-dashboard">
+              <div class="card-body">
+                  <ul>
+                      <h2 class="card-title">Order Details</h2><!-- End .card-title -->
+                      <li>Order Date : <%= order.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %>
+                      </li>
+                      <li>Total Amount : <%= order.totalAmount %>
+                      </li>
+                      <li>Payment Method :  <%= order.paymentMethod %>
+                      </li>
+                      <li>Order Id :  <%= order._id %> 
+                      </li>
+                      <li>Address : <%= order.deliveryAddress %>  
+                      </li>
+                      <li>Delivery Date : <%=expectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %>
+                      </li>
+                  </ul>
+              </div><!-- End .card-body -->
+          </div><!-- End .card-dashboard -->
+  </div><!-- End .row -->
+</div><!-- .End .tab-pane --> 
 
-<div class="container">
-    <div class="row">
-        <div class="col-4">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="..." class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-4">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="..." class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+  <div class="page-content">
+      <div class="container">
+          <table class="table table-wishlist table-mobile">
+              <thead>
+                  <tr>
+                      <th>Product Name</th>
+                      <th>Quantity</th>
+                      <th class="px-4">Order Id</th>
+                      <th>Total Price</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
 
+              <tbody>
+                <% if(order.products.length > 0){
+                    order.products.forEach((orders)=>{
+                        %>
+                      <td class="product-col">
+                          <div class="product">
+                              <figure class="product-media">
+                                  <a href="#">
+                                      <img src="/adminAssets/adminImages/<%=orders.productId.image[0] %>" alt="Product image">
+                                  </a>
+                              </figure>
+
+                              <h3 class="product-title">
+                                  <a href="#"><%=orders.productId.productName %></a>
+                              </h3><!-- End .product-title -->
+                          </div><!-- End .product -->
+                      </td>
+                      <td class="price-col"><%= orders.count%></td>
+                      <td class="price-col px-4"><%= orders._id%></td>
+                      <td class="price-col"><%= orders.totalPrice%></td>
+                      <td class="price-col"><%= orders.status%></td>
+                      <td class="price-col">
+                        
+                      </td>
+                  </tr>
+                <%})
+                }%>
+              </tbody>
+          </table><!-- End .table table-wishlist -->
+      </div><!-- End .container -->
+  </div><!-- End .page-content -->
+</main><!-- End .main -->
 
 
 <%- include('../userLayouts/footer.ejs') %>

@@ -35,13 +35,13 @@ const placeOrder = async (req,res,next) => {
       });
       const orderData = await order.save();
       if(orderData){
-        for(let i=0;i<products.length;i++){
-          const pro = products[i].productId
-          const count = products[i].count
-          await Product.findByIdAndUpdate({_id:pro},{$inc:{stockQuantity:-count}})
-        }
         if(order.status === 'placed'){
           await Cart.deleteOne({userId:id});
+          for(let i=0;i<products.length;i++){
+            const pro = products[i].productId
+            const count = products[i].count
+            await Product.findByIdAndUpdate({_id:pro},{$inc:{stockQuantity:-count}})
+          }
           res.json({codsuccess:true});
         }else{
           const orderId = orderData._id;
@@ -68,15 +68,21 @@ const placeOrder = async (req,res,next) => {
 
 const verifyPayment = async (req,res,next)=>{
   try{
+    const id = req.session.user_id;
     const details = req.body
-
-    
+    const cartData = await Cart.findOne({ userId: id });
+    const products = cartData.products;
     const crypto = require('crypto');
     const hmac = crypto.createHmac('sha256', process.env.Razorpay_Key_Secret);
     hmac.update(details.payment.razorpay_order_id + '|' + details.payment.razorpay_payment_id);
     const hmacValue = hmac.digest('hex');
   
     if(hmacValue === details.payment.razorpay_signature){
+      for(let i=0;i<products.length;i++){
+        const pro = products[i].productId
+        const count = products[i].count
+        await Product.findByIdAndUpdate({_id:pro},{$inc:{stockQuantity:-count}})
+      }
       await Order.findByIdAndUpdate({_id:details.order.receipt},{$set:{status:"placed"}});
       await Order.findByIdAndUpdate({_id:details.order.receipt},{$set:{paymentId:details.payment.razorpay_payment_id}});
       await Cart.deleteOne({userId:req.session.user_id});

@@ -1,6 +1,8 @@
 const User = require('../models/userModel');
 const Address = require('../models/addressModel');
 const Order = require('../models/orderModel');
+
+
 const loadUserdashboard = async (req,res,next) =>{
     try{
       const session = req.session.user_id;
@@ -179,6 +181,7 @@ const updateAddress = async (req,res,next) =>{
     try{
       const session = req.session.user_id;
       const userData = await User.findById(session);
+      const DeletePending = await Order.deleteMany({status:'pending'})
       const orderData = await Order.find({ userId: session }).populate("products.productId")
       const orderProducts = orderData.map(order => order.products); 
       res.render('order',{user:userData,session,orders:orderData});
@@ -191,9 +194,13 @@ const updateAddress = async (req,res,next) =>{
 
 const loadViewOrder = async (req,res,next)=>{
   try{
+    const id = req.params.id;
     const session = req.session.user_id;
     const userData = await User.findById(session); 
-    res.render('viewOrder',{user:userData,session});
+    const orderData = await Order.findOne({_id:id}).populate('products.productId');
+    const orderDate = orderData.date
+    const expectedDate = new Date(orderDate.getTime() + (5 * 24 * 60 * 60 * 1000)); 
+    res.render('viewOrder',{user:userData,session,order:orderData,expectedDate});
 
   }catch(err){
     next(err)
