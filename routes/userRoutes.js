@@ -60,7 +60,9 @@ userRoute.get('/editUserAddress/:id',auth.blocked,auth.isLogin,addressControler.
 userRoute.post('/updateUserAddress',addressControler.updateAddress);
 userRoute.post('/deleteUserAddress',addressControler.deleteUserAddress);
 userRoute.get('/UserOrder',auth.blocked,auth.isLogin,addressControler.loadeUserOrder);
-userRoute.get('/viewOrder/:id',addressControler.loadViewOrder);
+userRoute.get('/viewOrder/:id',auth.blocked,auth.isLogin,addressControler.loadViewOrder);
+userRoute.post('/cancelOrder',addressControler.cancelOrder);
+userRoute.post('/returnOrder',addressControler.returnOrder);
 
 
 //----------------- Search and filter section start
@@ -69,11 +71,14 @@ userRoute.get('/filterCategory/:id',userController.filterCategory);
 userRoute.get('/priceSort/:id',userController.priceSort);
 
 
+
 //---------------- Wishlist section start
 userRoute.get('/wishlist',auth.blocked,auth.isLogin,wishlistController.loadWhislist);
 userRoute.post('/addToWhislist',wishlistController.addToWhislist);
 userRoute.post('/deleteWhislist',wishlistController.deleteWhislist);
-userRoute.get('/deleteSingleWishlist/:id',wishlistController.deleteSingleWishlist);
+userRoute.get('/deleteSingleWishlist/:id',auth.blocked,auth.isLogin,wishlistController.deleteSingleWishlist);
+
+
 
 userRoute.use(errorHandler);
 

@@ -36,7 +36,7 @@
                                                 %>
                                                 <div class="card card-dashboard">
                                                     <div class="card-body">
-                                                        <input class="form-check-input pt-5" type="radio" name="selectAddress" id="flexRadioDefault1"
+                                                        <input required class="form-check-input pt-5" type="radio" name="selectAddress" id="flexRadioDefault1"
                                                          value="<%=address.userName %>,<%=address.mobile %>,<%=address.altrenativeMob %>,<%=address.houseName %>,<%=address.city %>,<%=address.state %>,<%=address.pincode %>,<%=address.landmark %>">
                                                         <ul>
                                                             <h3 class="card-title"> Address</h3><!-- End .card-title -->
@@ -88,18 +88,28 @@
                                                 <td>Total:</td>
                                                 <td >₹<span id="total"><%= totalAmount %>.00</span></td>
                                             </tr><!-- End .summary-total -->
+                                            <tr class="summary-total">
+                                                <td>Wallet Amount:</td>
+                                                <td>₹<span id="total"><%= user.wallet %></span></td>
+                                            </tr>
                                         </tbody>
                                     </table><!-- End .table table-summary -->
                                     <div class="accordion-summary">
                                       <div class="d-flex align-items-center">
                                           <div class="mr-2">
-                                              <input type="radio" id="COD" name="payment" value="COD">
+                                              <input required type="radio" id="walletpayment" name="payment" value="walletpayment">
+                                          </div>
+                                          <a href="" class="d-block text-dark" for="pay1">Wallet Payment</a>
+                                      </div>
+                                      <div class="d-flex align-items-center">
+                                          <div class="mr-2">
+                                              <input required type="radio" id="COD" name="payment" value="COD">
                                           </div>
                                           <a href="" class="d-block text-dark" for="pay1">Cash On Delivery</a>
                                       </div>
                                       <div class="d-flex align-items-center">
                                           <div class="mr-2">
-                                            <input type="radio" id="onlinPayment" name="payment" value="onlinPayment">
+                                            <input required type="radio" id="onlinPayment" name="payment" value="onlinPayment">
                                           </div>
                                           <a href="" class="d-block text-dark">Razer Pay</a>
                                       </div>
@@ -297,8 +307,17 @@ $("#checkoutForm").submit((e) => {
                 if (result.dismiss === swal.DismissReason.cancel) {
                   window.location.href = "/product";
                 }
-              });
-          }else{
+              });            
+          }else if(response.walletFailed == true){
+              swal.fire({
+                  positon: 'center',
+                  icon: "error",
+                  title: 'Insufficient Balance In Your Wallet',
+                  showConfirmButton: false,
+                  showCancelButton: false,
+                  timer:1500
+              })
+		      }else{
           razorpayPayment(response.order);
         }
       }

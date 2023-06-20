@@ -1,0 +1,165 @@
+<%- include('../adminLayouts/header.ejs') %>
+<%- include('../adminLayouts/navbar.ejs') %>
+
+<!-- Table Start -->
+<!-- Table Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded h-100 p-4">
+                <div style="display: flex; justify-content: space-between;">
+                    <h6 class="mb-4">Product Table</h6>
+                    <button type="button" class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add Product</button>
+                </div>
+               
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                              <th scope="col">No</th>
+                              <th scope="col">Coupon code</th>
+                              <th scope="col">Discount Type</th>
+                              <th scope="col">Start Date</th>
+                              <th scope="col">Expiry Date</th>
+                              <th scope="col">Percentage</th>
+                              <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                              <% if(coupon.length > 0){
+                                coupon.forEach((coupon,i) => { %>
+                              <tr>
+                                <td><%= i + 1 %></td>
+                                <td><%= coupon.code %></td>
+                                <td><%= coupon.discountType %></td>
+                                <td><%= coupon.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-')  %></td>
+                                <td><%= coupon.expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %></td>
+                                <td><%= coupon.discountPercentage %></td>
+                                <td>
+                                  <a href="" data-bs-toggle="modal" data-bs-target="#example-<%= coupon._id %>" data-bs-whatever="@mdo"><i class="bi bi-pencil-square bi fs-4"></i></a>
+                                  <a href="" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= coupon._id %>"><i class="bi bi-trash bi fs-4 ms-3"></i></a>
+                                </td>
+                              </tr>
+
+                              <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop<%= coupon._id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content" style="background-color: #191C24;color: aliceblue;">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">Delete Category</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <p>Are you sure you want to delete coupon ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <a href="/admin/couponList"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button></a>
+                                        <a href="/admin/deleteCoupon?id=<%= coupon._id %>"><button type="button" class="btn btn-primary">Yes</button></a>
+                                        
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+
+
+                              <% });
+                            }else { %> 
+                            <tr>
+                              <td>
+                                <td colspan="9">No Any Coupon Available</td>
+                              </td>
+                            </tr>
+                            <% } %> 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>   
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #191C24;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/addCoupon" method="post">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Coupon code</label>
+              <input type="text" class="form-control" id="couponCode" name="code" >
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Discount Type</label>
+              <input type="text" class="form-control" id="discountType" name="discountType">
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Start Date</label>
+              <input type="date" class="form-control" id="startDate" name="startDate" >
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Expiry Date</label>
+                <input type="date" class="form-control" id="expiryDate" name="expiryDate">
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Percentage</label>
+                <input type="text" class="form-control" id="percentage" name="percentage">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+           </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <% for (let i = 0; i < coupon.length; i++) { %>
+  <div class="modal fade" id="example-<%= coupon[i]._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #191C24;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/editCoupon/<%= coupon[i]._id %>" method="post">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Coupon code</label>
+              <input type="text" class="form-control" id="couponCode" name="code" value="<%= coupon[i].code %>">
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Discount Type</label>
+              <input type="text" class="form-control" id="discountType" name="discountType" value="<%= coupon[i].discountType %>">
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Start Date</label>
+              <input type="text" class="form-control" id="startDate" name="startDate" value="<%= coupon[i].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %>">
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Expiry Date</label>
+                <input type="text" class="form-control" id="expiryDate" name="expiryDate" value="<%= coupon[i].expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %>">
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Percentage</label>
+                <input type="text" class="form-control" id="percentage" name="percentage" value="<%= coupon[i].discountPercentage %>">
+                <input type="hidden" name="id" value="<%= coupon[i]._id %>">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+           </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+<%- include('../adminLayouts/footer.ejs') %>

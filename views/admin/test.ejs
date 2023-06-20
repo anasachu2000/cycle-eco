@@ -1,0 +1,46 @@
+const CancelOrder = async (req, res) => {
+    try {
+      const id = req.body.orderid;
+      const reason = req.body.reason
+      const ordersId = req.body.ordersid;
+      const Id = req.session.user_id
+      const userData = await ordermodel.findById(Id)
+      const orderData = await ordermodel.findOne({ userId: Id, 'products._id': id})
+      const product = orderData.products.find((Product) => Product._id.toString() === id);
+      const cancelledAmount = product.totalPrice
+      const proCount = product.count
+      const proId = product.productId   
+      const updatedOrder = await ordermodel.findOneAndUpdate(
+        {
+          userId: Id,
+          'products._id': id
+        },
+        {
+          $set: {
+            'products.$.status': 'cancelled',
+            'products.$.cancelReason': reason
+          }
+        },
+        { new: true }
+      );
+  
+  
+      if (updatedOrder) {
+           await productmodel.findByIdAndUpdate({_id:proId},{$inc:{StockQuantity:proCount}})
+        if(orderData.paymentMethod === 'onlinePayment' || orderData.paymentMethod === 'Wallet'){
+           await usermodel.findByIdAndUpdate({_id:Id},{$inc:{wallet:cancelledAmount}})
+          //  await ordermodel.findByIdAndUpdate({_id:Id},{$inc:{totalAmount:-cancelledAmount}})
+  
+          await ordermodel.findByIdAndUpdate(Id, { $inc: { totalAmount: -cancelledAmount } });
+  
+           res.redirect("/vieworder/" + ordersId)
+        }else{
+          res.redirect("/vieworder/" + ordersId)
+        }
+      } else {
+        res.redirect("/vieworder/" + ordersId)
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };

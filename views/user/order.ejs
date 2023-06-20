@@ -23,7 +23,7 @@
             
               <td class="price-col px-4"><%= order._id %></td>
               <td class="price-col"><%= order.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %></td>
-              <td class="price-col"><%= order.totalAmount %></td>
+              <td class="price-col">₹ <%= order.totalAmount %>.00</td>
               <td class="price-col"><%= order.paymentMethod %></td>
               <td class="price-col">
                 <a class="btn btn-outline-primary-2" href="/viewOrder/<%= order._id %>">Details</a>
@@ -33,7 +33,7 @@
         } else { %>
           <tr>
             <td colspan="6">
-              <h2 class="text-danger text-center text-dark py-5">No items in wishlist</h2>
+              <h2 class="text-danger text-center text-dark py-5">No items in order</h2>
             </td>
           </tr>
         <% } %>

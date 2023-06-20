@@ -7,6 +7,7 @@ const adminController = require('../controllers/adminController');
 const categoryController = require('../controllers/categoryController');
 const productController = require('../controllers/productController');
 const adminOrderController = require('../controllers/adminOrderController');
+const couponController = require('../controllers/couponController');
 const multer = require('multer');
 const update = require('../configuration/multer');
 const errorHandler = require('../middleware/errorHandling');
@@ -45,10 +46,18 @@ adminRoute.get('/deleteimg/:imgid/:prodid',auth.isLogin,productController.delete
 adminRoute.post("/editProductList/updateimage/:id",update.upload.array('image'),productController.updateimage)
 
 
-//---------------- ORDER LIST SECTION START
-adminRoute.get('/orderList',adminOrderController.loadOrderList);
-adminRoute.get('/singleOrderList/:id',adminOrderController.loadSingleOrderList)
 
+//---------------- ORDER LIST SECTION START
+adminRoute.get('/orderList',auth.isLogin,adminOrderController.loadOrderList);
+adminRoute.get('/singleOrderList/:id',auth.isLogin,adminOrderController.loadSingleOrderList);
+adminRoute.post('/changeStatus',adminOrderController.cahngeStatus);
+
+
+
+adminRoute.get('/couponList',auth.isLogin,couponController.loadCopon);
+adminRoute.post('/addCoupon',couponController.addCoupon);
+adminRoute.post('/editCoupon/:id',couponController.editCoupon);
+adminRoute.get('/deleteCoupon',couponController.deleteCoupon);
 
 
 adminRoute.get('*',(req,res)=>{

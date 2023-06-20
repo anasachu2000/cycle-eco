@@ -43,32 +43,80 @@
                         </thead>
                         <tbody>
                             <% if(order.products.length > 0){
-                                order.products.forEach((order,i)=>{ 
+                                order.products.forEach((orders,i)=>{ 
                                   %>
                               <tr>
                                 <td><%= i + 1 %></td>
                                 <td class="py-1">
-                                
-                                    <img style="width: 45px; height: 45px;" src="/adminAssets/adminImages/<%= order.productId.image[0]%>" alt="image" />
+                                    <img style="width: 45px; height: 45px;" src="/adminAssets/adminImages/<%= orders.productId.image[0]%>" alt="image" />
                                 </td>
-                                <td><%= order.productId.productName%></td>
-                                <td><%= order.productId.brand%></td>
-                                <td><%= order.productPrice%></td>
-                                <td><%= order.status%></td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<%= i %>" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Actions
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= i %>">
-                                        <li><a class="dropdown-item" href="#">Action 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Action 2</a></li>
-                                        <li><a class="dropdown-item" href="#">Action 3</a></li>
-                                        </ul>
-                                    </div>
-                            
-                                </td>
+                                <td><%= orders.productId.productName%></td>
+                                <td><%= orders.productId.brand%></td>
+                                <td><%= orders.productPrice%></td>
+                                <td><%= orders.status%></td>
+                                <% if (orders.status === 'Delivered') { %>
+                                    <td>Delivered</td>
+                                <%}else if(orders.status === 'return'){ %>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBa">View Reason</button>
+                                    </td>
+                                <% } else if (orders.status === 'cancelled') { %>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">View Reason</button>
+                                    </td>
+                                <% } else { %>
+                                    <td>
+                                        <select style="width: 70%;" class="form-select" aria-label="Default select example" onchange="changeStatus(this.value, '<%= orders._id %>', '<%= order.userId %>')">
+                                            <option selected>Action</option>
+                                            <option value="Shipped">Shipped</option>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Out for Delivery">Out for Delivery</option>
+                                        </select>
+                                    </td>
+                                <% } %>
                               </tr>
+
+
+
+                              <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content"  style="background-color: #191C24;">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><%= orders.cancelReson %></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Understood</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBa" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content"  style="background-color: #191C24;">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><%= orders.returnReson %></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Understood</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+           
                               <%
                                 })
                                 }else{ %>
@@ -83,6 +131,24 @@
 </div>  
 
 
- 
+
+
+
+<script>
+    function changeStatus(status, orderId, userId) {
+        $.ajax({
+            method: 'post',
+            url: '/admin/changeStatus',
+            data: {
+                status: status,
+                orderId: orderId,
+                userId: userId
+            },
+            success: (response) => {
+                location.reload();
+            }
+        });
+    }
+</script>
 
 <%- include('../adminLayouts/footer.ejs') %>

@@ -41,7 +41,13 @@ products: [{
     status:{
         type:String,
         default:'placed'
-    }
+    },
+    cancelReson:{
+        type:String,
+    },
+    returnReson:{
+        type:String,
+    },
 }],
 totalAmount:{
     type:Number,

@@ -44,17 +44,35 @@ const placeOrder = async (req,res,next) => {
           }
           res.json({codsuccess:true});
         }else{
-          const orderId = orderData._id;
-          const totalAmount = orderData.totalAmount;
-          var options = {
-            amount: totalAmount*100,
-            currency:'INR',
-            receipt:''+ orderId
-          } 
-
-         instance.orders.create(options,function(err,order){
-            res.json({order});
-          })
+          if(paymentMethod === 'walletpayment'){
+            const wallet = userName.wallet;
+            if(wallet >= Total){
+             await User.findByIdAndUpdate({_id:id},{$inc:{wallet:-Total}})
+             await Cart.deleteOne({userId:id});
+              for(let i=0;i<products.length;i++){
+                const pro = products[i].productId
+                const count = products[i].count
+                await Product.findByIdAndUpdate({_id:pro},{$inc:{stockQuantity:-count}})
+              }
+              const orderId = order._id;
+              await Order.findByIdAndUpdate({_id:orderId},{$set:{status:'placed'}});
+              res.json({codsuccess:true});
+            }else{
+              res.json({walletFailed:true});
+            }
+          }else{
+            const orderId = orderData._id;
+            const totalAmount = orderData.totalAmount;
+            var options = {
+              amount: totalAmount*100,
+              currency:'INR',
+              receipt:''+ orderId
+            } 
+  
+           instance.orders.create(options,function(err,order){
+              res.json({order});
+            })
+          }
         }
       }else{
         res.redirect('/')

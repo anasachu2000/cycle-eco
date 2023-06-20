@@ -31,8 +31,34 @@ const loadOrderList = async (req,res,next)=>{
   }
 
 
+  const cahngeStatus = async(req,res,next)=>{
+    try{
+      const status = req.body.status;
+      const orderId = req.body.orderId;
+      const userId = req.body.userId;
+      const updateOrder = await Order.findOneAndUpdate(
+        {
+          userId: userId,
+          'products._id': orderId
+        },
+        {
+          $set: {
+            'products.$.status': status
+          }
+        },
+        { new: true }
+      );
+      if(updateOrder){
+        res.json({success:true})
+      }
+
+    }catch(err){
+      next(err)
+    }
+  }
 
   module.exports = {
     loadOrderList,
     loadSingleOrderList,
+    cahngeStatus,
   }

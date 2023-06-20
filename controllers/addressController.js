@@ -1,7 +1,7 @@
 const User = require('../models/userModel');
 const Address = require('../models/addressModel');
 const Order = require('../models/orderModel');
-
+const Product = require('../models/productModal');
 
 const loadUserdashboard = async (req,res,next) =>{
     try{
@@ -156,6 +156,7 @@ const updateAddress = async (req,res,next) =>{
   }
 
 
+//-------- Delete user address section  -----------//
   const deleteUserAddress = async (req,res,next) => {
     try {
       const id = req.session.user_id;
@@ -176,7 +177,7 @@ const updateAddress = async (req,res,next) =>{
   };
 
 
-
+//-------- Load user order section  -----------//
   const loadeUserOrder = async(req,res,next)=>{
     try{
       const session = req.session.user_id;
@@ -192,6 +193,7 @@ const updateAddress = async (req,res,next) =>{
   }
 
 
+//-------- load user view order section  -----------//
 const loadViewOrder = async (req,res,next)=>{
   try{
     const id = req.params.id;
@@ -208,6 +210,91 @@ const loadViewOrder = async (req,res,next)=>{
 }
   
 
+//-------- Cancel order section  -----------//
+const cancelOrder = async (req,res,next)=>{
+  try{
+    const id = req.body.ordersid;
+    const reason = req.body.reason;
+    const ordId = req.body.orderid;
+    const session = req.session.user_id;
+    const orderData = await Order.findOne({userId:session,'products._id':id})
+    const product =  orderData.products.find((p) => p._id.toString() === id);
+    const cancelAmount = product.totalPrice;
+    const procount = product.count;
+    const proId = product.productId;
+    const updatedOrder = await Order.findOneAndUpdate({
+      userId:session,
+      'products._id':id,
+    },{
+      $set:{
+        'products.$.status':'cancelled',
+        'products.$.cancelReson':reason,
+      }
+    },{
+      new:true
+    }
+    );
+    if(updatedOrder){
+      await Product.findByIdAndUpdate({_id:proId},{$inc:{stockQuantity:procount}});
+      if(orderData.paymentMethod === 'onlinPayment' ||  orderData.paymentMethod === 'Wallet'){
+        await User.findByIdAndUpdate({_id:session},{$inc:{wallet:cancelAmount}})
+        await Order.findByIdAndUpdate(session, { $inc: { totalAmount: -cancelAmount } });
+        res.redirect("/viewOrder/" + ordId)
+      }else{
+        res.redirect("/viewOrder/" + ordId);
+      }
+    }else{
+      res.redirect("/viewOrder/" + ordId);
+    }  
+  }catch(err){
+    next(err);
+  }
+}
+
+
+//-------- Return order section  -----------//
+const returnOrder = async (req,res,next) =>{
+  try{
+    const id = req.body.ordersId;
+    const reason = req.body.reasons;
+    const ordId = req.body.orderId;
+    const session = req.session.user_id;
+    const orderData = await Order.findOne({userId:session,'products._id':id})
+    const product =  orderData.products.find((p) => p._id.toString() === id);
+    const returnAmount = product.totalPrice;
+    const procount = product.count;
+    const proId = product.productId;
+    const updatedOrder = await Order.findOneAndUpdate({
+      userId:session,
+      'products._id':id,
+    },{
+      $set:{
+        'products.$.status':'return',
+        'products.$.returnReson':reason,
+      }
+    },{
+      new:true
+    }
+    );
+    if(updatedOrder){
+      await Product.findByIdAndUpdate({_id:proId},{$inc:{stockQuantity:procount}});
+      if(orderData.paymentMethod === 'onlinPayment' ||  orderData.paymentMethod === 'Wallet'){
+        await User.findByIdAndUpdate({_id:session},{$inc:{wallet:returnAmount}})
+        await Order.findByIdAndUpdate(session, { $inc: { totalAmount: -returnAmount } });
+        res.redirect("/viewOrder/" + ordId)
+      }else{
+        res.redirect("/viewOrder/" + ordId);
+      }
+    }else{
+      res.redirect("/viewOrder/" + ordId);
+    }  
+  }catch(err){
+    next(err);
+  }
+}
+
+
+
 
 module.exports = {
     loadUserdashboard,
@@ -220,4 +307,6 @@ module.exports = {
     deleteUserAddress,
     loadeUserOrder,
     loadViewOrder,
+    cancelOrder,
+    returnOrder,
 }

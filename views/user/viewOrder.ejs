@@ -12,14 +12,16 @@
       </div><!-- End .container -->
   </nav><!-- End .breadcrumb-nav -->
 <div>
-  <div class="d-flex justify-content-center">
+<div class="page-content">
+    <div class="container">
+        <div class="d-flex">
           <div class="card card-dashboard">
               <div class="card-body">
                   <ul>
                       <h2 class="card-title">Order Details</h2><!-- End .card-title -->
                       <li>Order Date : <%= order.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %>
                       </li>
-                      <li>Total Amount : <%= order.totalAmount %>
+                      <li>Total Amount : ₹ <%= order.totalAmount %>.00
                       </li>
                       <li>Payment Method :  <%= order.paymentMethod %>
                       </li>
@@ -42,8 +44,8 @@
               <thead>
                   <tr>
                       <th>Product Name</th>
-                      <th>Quantity</th>
-                      <th class="px-4">Order Id</th>
+                      <th class="text-center">Quantity</th>
+                      <th class="pr-4">Order Id</th>
                       <th>Total Price</th>
                       <th>Status</th>
                       <th>Action</th>
@@ -51,37 +53,118 @@
               </thead>
 
               <tbody>
-                <% if(order.products.length > 0){
-                    order.products.forEach((orders)=>{
-                        %>
+                <% if (order.products.length > 0) {
+                  order.products.forEach((orders) => { %>
+                    <tr> <!-- Add this opening <tr> tag -->
                       <td class="product-col">
-                          <div class="product">
-                              <figure class="product-media">
-                                  <a href="#">
-                                      <img src="/adminAssets/adminImages/<%=orders.productId.image[0] %>" alt="Product image">
-                                  </a>
-                              </figure>
-
-                              <h3 class="product-title">
-                                  <a href="#"><%=orders.productId.productName %></a>
-                              </h3><!-- End .product-title -->
-                          </div><!-- End .product -->
+                        <div class="product">
+                          <figure class="product-media">
+                            <a href="#">
+                              <img src="/adminAssets/adminImages/<%=orders.productId.image[0] %>" alt="Product image">
+                            </a>
+                          </figure>
+              
+                          <h3 class="product-title">
+                            <a href="#"><%=orders.productId.productName %></a>
+                          </h3><!-- End .product-title -->
+                        </div><!-- End .product -->
                       </td>
-                      <td class="price-col"><%= orders.count%></td>
-                      <td class="price-col px-4"><%= orders._id%></td>
-                      <td class="price-col"><%= orders.totalPrice%></td>
-                      <td class="price-col"><%= orders.status%></td>
+                      <td class="price-col text-center"><%= orders.count%></td>
+                      <td class="price-col pr-4"><%= orders._id%></td>
+                      <td class="price-col">₹ <%= orders.totalPrice%>.00</td>
+                      <% if (orders.status === 'cancelled') { %>
+                        <td class="price-col"><%= orders.status%></td>
+                      <% }else if(orders.status === 'return'){ %>
+                        <td class="price-col"><%= orders.status%></td>
+                      <% } else if (orders.status === 'Delivered') { %>
+                        <td class="price-col"><%= orders.status%></td>
+                      <% } else { %>
+                        <td class="price-col"><%= orders.status%></td>
+                      <% } %>
                       <td class="price-col">
-                        
+                        <% if (orders.status === 'cancelled') { %>
+                        <% }else if(orders.status === 'return'){%>  
+                        <% } else if (orders.status === 'Out for Delivery') { %>
+                          <a class="text-dark text-center" href="">Out for Delivery</a>
+                        <% } else if (orders.status === 'Delivered') { %>
+                          <a class="btn btn-outline-primary-2" href="" data-bs-toggle="modal" data-bs-target="#returnOrder-<%= order._id %>">Return</a>
+                        <% } else { %>
+                          <a class="btn btn-outline-primary-2" href="" data-bs-toggle="modal" data-bs-target="#exampleModal-<%= order._id %>">Cancel</a>
+                        <% } %>
                       </td>
-                  </tr>
-                <%})
-                }%>
+
+
+                      <div class="modal fade" id="exampleModal-<%= order._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form action="/cancelOrder" method="post">
+                                <input type="hidden" value="<%= order._id %>" name="orderid">
+                                <input type="hidden" value="<%= orders._id %>" name="ordersid">
+                            
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Are You Sure</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                    <p class="mx-5 mt-2 "> <input type="radio" value=" Decided for alternative product"  name="reason" required> <span class="font-weight-bold"> Decided for alternative product</span></p>
+                                    <p class="mx-5"> <input type="radio" value="Unexpected Shipping costs" name="reason" required> <span class="font-weight-bold"> Unexpected Shipping costs</span></p>
+                                    <p class="mx-5"> <input type="radio" value=" Delivery time is too long" name="reason" required> <span class="font-weight-bold"> Delivery time is too long</span></p>
+                                    <p class="mx-5 mb-2"> <input type="radio" value="Others" name="reason" required><span class="font-weight-bold"> Others</span></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-primary"  >Yes</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="modal fade" id="returnOrder-<%= order._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form action="/returnOrder" method="post">
+                                <input type="hidden" value="<%= order._id %>" name="orderId">
+                                <input type="hidden" value="<%= orders._id %>" name="ordersId">
+                            
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Are You Sure</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <div class="mb-3">
+                                        <label for="recipient-name" class="col-form-label">Write a reson for return:</label>
+                                        <input type="text" class="form-control" name="reasons" id="recipient-name">
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-primary"  >Yes</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    </tr>
+                  <% });
+                } %>
               </tbody>
           </table><!-- End .table table-wishlist -->
       </div><!-- End .container -->
   </div><!-- End .page-content -->
 </main><!-- End .main -->
+
+
+
+
+
+
 
 
 <%- include('../userLayouts/footer.ejs') %>
