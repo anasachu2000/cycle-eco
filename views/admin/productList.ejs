@@ -8,7 +8,7 @@
             <div class="bg-secondary rounded h-100 p-4">
                 <div style="display: flex; justify-content: space-between;">
                     <h6 class="mb-4">Product Table</h6>
-                    <button type="button" class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add Product</button>
+                    <button type="button" class="btn btn-outline-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add Product</button>
                 </div>
                
                 <div class="table-responsive">
@@ -23,6 +23,7 @@
                               <th scope="col">Category</th>
                               <th scope="col">Stock</th>
                               <th scope="col">Action</th>
+                              <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,13 +37,35 @@
                                   <% } %>
                                 </td>
                                 <td><%= product[i].productName %></td>
-                                <td><%= product[i].price %></td>
+                                <% 
+                                
+                                const discount =  product[i].discountPercentage; 
+        
+                                const price =  product[i].price 
+        
+                                const discountAmount = Math.round((price*discount)/100)
+        
+                                const total = price - discountAmount
+
+                                %>
+                                <td>
+                                  <% if(discountAmount <= 0) {%>
+                                    <%= product[i].price %>
+                                    <% }else{ %>
+                                  <del class="text-danger"><%= product[i].price %></del>
+                                  <%= total %>
+                                  <% } %>
+                                </td>
                                 <td><%= product[i].brand %></td>
                                 <td><%= product[i].category %></td>
                                 <td><%= product[i].stockQuantity %></td>
                                 <td>
                                   <a href="/admin/editProductList/<%= product[i]._id %>"><i class="bi bi-pencil-square bi fs-4"></i></a>
                                   <a href="" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= product[i]._id %>"><i class="bi bi-trash bi fs-4 ms-3"></i></a>
+                                </td>
+                                <td>
+                                  <button type="button" class="btn btn-outline-success btn-sm"  data-bs-toggle="modal" data-bs-target="#offerModal-<%= product[i]._id %>"
+                                  data-bs-whatever="@mdo">Add offer</button>
                                 </td>
                               </tr>
                                <!-- Modal -->
@@ -142,9 +165,38 @@
   </div>
 </div>
               
-<!-- ===================== Product edit modal =================================== -->
 
-
+<!-- product offer section inserting modal section -->
+<% for (let i = 0; i < product.length; i++) { %>
+  <div class="modal fade" id="offerModal-<%= product[i]._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #191C24;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/addOffer" method="post">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">discount Name</label>
+              <input type="text" class="form-control" id="recipient-name" name="discountName">
+              <input type="hidden" name="id" value="<%= product[i]._id %>">
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">discount Percentage</label>
+              <input type="text" class="form-control" id="recipient-name" name="discountPercentage">
+              <input type="hidden" name="id" value="<%= product[i]._id %>">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {

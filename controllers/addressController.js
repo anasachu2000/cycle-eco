@@ -3,71 +3,81 @@ const Address = require('../models/addressModel');
 const Order = require('../models/orderModel');
 const Product = require('../models/productModal');
 
+
+
+//---------------- DASHBOARD SHOWING SECTION START
 const loadUserdashboard = async (req,res,next) =>{
-    try{
-      const session = req.session.user_id;
-      const userData = await User.findById({_id:session});
-      res.render('userDashboard',{session,user:userData});
-  
-    }catch(err){
-      next(err);
-    }
-  } 
-  
-  
-  const editUserDashboad = async (req,res,next) =>{
-    try{
-      const id = req.params.id;
-      const userData = await User.findById(req.session.user_id)
-      if(userData){
-        res.render('userDashboard',{user:userData});
-      }else{
-        res.redirect('/userdasboard');
-      }
-    }catch(err){
-      next(err);
-    }
+  try{
+    const session = req.session.user_id;
+    const userData = await User.findById({_id:session});
+    res.render('userDashboard',{session,user:userData});
+
+  }catch(err){
+    next(err);
   }
-  
-  
-  const updateUserDashboard = async (req,res,next) => {
-    try {
-      const id = req.body.id;
-      const updateDashboard = await User.findByIdAndUpdate(id, {name: req.body.name,number: req.body.number});
-      if (updateDashboard) {
-        res.redirect('/userdasboard');
-      } else {
-        res.redirect('/userdasboard');
-      }
-    } catch (err) {
-      next(err);
-    }
-  };
+} 
 
 
 
-  const loadUserAddress = async (req,res,next) =>{
-    try{
-      const session = req.session.user_id;
-      const userData = await User.findById({_id:session});
-      const addressData = await Address.findOne({userId:session})
-      if(session){
-        if(addressData){
-            const address = addressData.addresses
-            res.render('userAddress',{user:userData,session,address:address})
-
-        }else{
-            res.render('emptyUserAddress',{user:userData,session})
-        }
+//---------------- DASHBOARD EDITING SECTION START
+const editUserDashboad = async (req,res,next) =>{
+  try{
+    const id = req.params.id;
+    const userData = await User.findById(req.session.user_id)
+    if(userData){
+      res.render('userDashboard',{user:userData});
     }else{
-        res.redirect('/home',{user:userData,session})
+      res.redirect('/userdasboard');
     }
-    }catch(err){
-      next(err);
-    }
-  } 
+  }catch(err){
+    next(err);
+  }
+}
 
-//-------- Adrees inserting section  -----------//
+
+
+//---------------- DASHBOARD UPDATING SECTION START  
+const updateUserDashboard = async (req,res,next) => {
+  try {
+    const id = req.body.id;
+    const updateDashboard = await User.findByIdAndUpdate(id, {name: req.body.name,number: req.body.number});
+    if (updateDashboard) {
+      res.redirect('/userdasboard');
+    } else {
+      res.redirect('/userdasboard');
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+//---------------- USER ADDRESS SHOWING SECTION START
+const loadUserAddress = async (req,res,next) =>{
+  try{
+    const session = req.session.user_id;
+    const userData = await User.findById({_id:session});
+    const addressData = await Address.findOne({userId:session})
+    if(session){
+      if(addressData){
+          const address = addressData.addresses
+          res.render('userAddress',{user:userData,session,address:address})
+
+      }else{
+          res.render('emptyUserAddress',{user:userData,session})
+      }
+  }else{
+      res.redirect('/home',{user:userData,session})
+  }
+  }catch(err){
+    next(err);
+  }
+} 
+
+
+
+//---------------- USER ADDRESS INSERTING SECTION START
 const insertUserAddresss = async (req,res,next)=>{
     try {
       const addressDetails = await Address.findOne({userId:req.session.user_id});
@@ -115,85 +125,90 @@ const insertUserAddresss = async (req,res,next)=>{
 }
 
 
-  //-------- Edit address section  -----------//
+
+//---------------- USER EDIT ADDRESS SECTION START
 const editUserAddress = async (req,res,next)=>{
-    try {
-     const id = req.params.id;
-     const session = req.session.user_id;
-     const user = await User.find({})
-     const addressData = await Address.findOne({userId:session},{addresses:{$elemMatch:{_id:id}}});
-     const address = addressData.addresses;
-     res.render('userAddress',{address:address[0],session:session,user:user}) ;
-    } catch (err) {
-      next(err);
-    }
+  try {
+    const id = req.params.id;
+    const session = req.session.user_id;
+    const user = await User.find({})
+    const addressData = await Address.findOne({userId:session},{addresses:{$elemMatch:{_id:id}}});
+    const address = addressData.addresses;
+    res.render('userAddress',{address:address[0],session:session,user:user}) ;
+  } catch (err) {
+    next(err);
   }
+}
 
 
-  //-------- Update address section  -----------//
+
+//---------------- USER ADDRESS UPDATING SECTION START
 const updateAddress = async (req,res,next) =>{
-    try{
-      const session = req.session.user_id;
-      const id = req.body.id;
-      const address = await Address.updateOne({ userId: session }, { $pull: { addresses: { _id: id } } });
-      const pushAddress = await Address.updateOne({userId:session},
-        {$push:
-          {addresses:{
-            userName:req.body.Username,
-            mobile:req.body.number,
-            altrenativeMob:req.body.AltrenativeMobile,
-            houseName:req.body.houseName,
-            city:req.body.city,
-            state:req.body.state,
-            pincode:req.body.pincode,
-            landmark:req.body.landmark,
-          }
-        }})
-        res.redirect('/userAddress')
-    }catch(err){
-      next(err);
-    }
+  try{
+    const session = req.session.user_id;
+    const id = req.body.id;
+    const address = await Address.updateOne({ userId: session }, { $pull: { addresses: { _id: id } } });
+    const pushAddress = await Address.updateOne({userId:session},
+      {$push:
+        {addresses:{
+          userName:req.body.Username,
+          mobile:req.body.number,
+          altrenativeMob:req.body.AltrenativeMobile,
+          houseName:req.body.houseName,
+          city:req.body.city,
+          state:req.body.state,
+          pincode:req.body.pincode,
+          landmark:req.body.landmark,
+        }
+      }})
+      res.redirect('/userAddress')
+  }catch(err){
+    next(err);
   }
+}
 
 
-//-------- Delete user address section  -----------//
-  const deleteUserAddress = async (req,res,next) => {
-    try {
-      const id = req.session.user_id;
-      const addId = req.body.address;
-      const addressData = await Address.findOne({ userId: id });
-      if (addressData.addresses.length === 1) {
-        await Address.deleteOne({ userId: id });
-      } else {
-        await Address.updateOne(
-          { userId: id },
-          { $pull: { addresses: { _id: addId } } }
-        );
-      }
-      res.status(200).json({ message: "Address deleted successfully" });
-    } catch (err) {
-      next(err);
+
+//---------------- DELETE USER ADDRESS SECTION START
+const deleteUserAddress = async (req,res,next) => {
+  try {
+    const id = req.session.user_id;
+    const addId = req.body.address;
+    const addressData = await Address.findOne({ userId: id });
+    if (addressData.addresses.length === 1) {
+      await Address.deleteOne({ userId: id });
+    } else {
+      await Address.updateOne(
+        { userId: id },
+        { $pull: { addresses: { _id: addId } } }
+      );
     }
-  };
-
-
-//-------- Load user order section  -----------//
-  const loadeUserOrder = async(req,res,next)=>{
-    try{
-      const session = req.session.user_id;
-      const userData = await User.findById(session);
-      const DeletePending = await Order.deleteMany({status:'pending'})
-      const orderData = await Order.find({ userId: session }).populate("products.productId")
-      const orderProducts = orderData.map(order => order.products); 
-      res.render('order',{user:userData,session,orders:orderData});
-
-    }catch(err){
-      next(err)
-    }
+    res.status(200).json({ message: "Address deleted successfully" });
+  } catch (err) {
+    next(err);
   }
+};
 
 
-//-------- load user view order section  -----------//
+
+//---------------- USER ORDER SHOWING SECTION START
+const loadeUserOrder = async(req,res,next)=>{
+  try{
+    const session = req.session.user_id;
+    const userData = await User.findById(session);
+    const DeletePending = await Order.deleteMany({status:'pending'})
+    const orderData = await Order.find({ userId: session }).populate("products.productId")
+    const orderProducts = orderData.map(order => order.products); 
+    res.render('order',{user:userData,session,orders:orderData});
+
+  }catch(err){
+    next(err)
+  }
+}
+
+
+
+//---------------- USER SINGLE ORDER SHOWING SECTION START 
 const loadViewOrder = async (req,res,next)=>{
   try{
     const id = req.params.id;
@@ -210,7 +225,8 @@ const loadViewOrder = async (req,res,next)=>{
 }
   
 
-//-------- Cancel order section  -----------//
+
+//---------------- USER ORDER CANSEL SECTION START
 const cancelOrder = async (req,res,next)=>{
   try{
     const id = req.body.ordersid;
@@ -252,7 +268,8 @@ const cancelOrder = async (req,res,next)=>{
 }
 
 
-//-------- Return order section  -----------//
+
+//---------------- USER ORDER RETURN SECTION START
 const returnOrder = async (req,res,next) =>{
   try{
     const id = req.body.ordersId;
@@ -292,7 +309,6 @@ const returnOrder = async (req,res,next) =>{
     next(err);
   }
 }
-
 
 
 

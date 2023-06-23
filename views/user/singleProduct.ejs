@@ -52,7 +52,23 @@
                         <div class="product-details">
                             <h1 class="product-title"><%= product.productName %></h1><!-- End .product-title -->
                             <div class="product-price">
-                                ₹<%=product.price%>.00
+                                <% 
+                                
+                                    const discount =  product.discountPercentage; 
+            
+                                    const price =  product.price 
+            
+                                    const discountAmount = Math.round((price*discount)/100)
+            
+                                    const total = price - discountAmount
+
+                                %>
+                                <% if(discountAmount <= 0) {%>
+                                    ₹<%= product.price %>.00
+                                <% }else{ %>
+                                    <del class="text-danger">₹<%= product.price %>.00</del>
+                                    ₹<%= total %>.00
+                                <% } %>
                             </div><!-- End .product-price -->
 
                             <div class="product-content">

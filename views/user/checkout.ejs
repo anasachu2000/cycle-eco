@@ -1,7 +1,7 @@
 <%- include('../userLayouts/header.ejs') %>
     <%- include('../userLayouts/navbar.ejs') %>
         <main class="main">
-            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav" style="margin-bottom: 2rem !important;">
                 <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/home">Home</a></li>
@@ -14,23 +14,27 @@
             <div class="page-content">
                 <div class="checkout">
                     <div class="container">
-                        <div class="checkout-discount">
-                            <form action="#">
-                                <input type="text" class="form-control" required id="checkout-discount-input">
-                                <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click
-                                        here to enter your code</span></label>
-                            </form>
+                        <div class="checkout-discount  pb-5">
+                          <form action="#">
+                              <label for="" class="text-truncate">View available coupon code : <a class="text-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Click here </a></label>
+                          </form>
                         </div><!-- End .checkout-discount -->
+                        <div class="checkout-discount">
+                            <form>
+                                <input type="text"  class="form-control" required id="code" placeholder="Have a coupon? here to enter your code">
+                                <button class="btn btn-outline-primary-2" onclick="applycoupon($('#code').val())">Applay coupon</button>
+                            </form>
+                        </div><!-- End .checkout-discount -->         
                         <form action="#" id="checkoutForm">
                             <div class="row">
-                                <div class="col-lg-9">
-                                    <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                                <div class="col-lg-9"> 
+                                    <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->   
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <div class="d-flex justify-content-end pb-2">
-                                                <a href="" type="button" class="btn btn-outline-primary-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> Add
-                                                    Address</a>
-                                            </div>
+                                          <div class="d-flex justify-content-end pb-2">
+                                            <a href="" type="button" class="btn btn-outline-primary-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> Add
+                                                Address</a>
+                                          </div>
                                             <% if(address.length> 0){
                                                 address.forEach((address)=>{
                                                 %>
@@ -76,6 +80,10 @@
                                     <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
                                     <table class="table table-summary">
                                         <tbody>
+                                          <tr class="summary-subtotal">
+                                                <td>Wallet Amount:</td>
+                                                <td>₹<span id="totals"><%= user.wallet %></span></td>
+                                            </tr>
                                             <tr class="summary-subtotal">
                                                 <td>Subtotal:</td>
                                                 <td>₹<%= Total %>.00</td>
@@ -84,14 +92,14 @@
                                                 <td>Delivery charge:</td>
                                                 <td>₹ 80.00</td>
                                             </tr>
+                                            <tr>
+                                                <td>Discount:</td>
+                                                <td>₹<span id="discount">.00</td>
+                                            </tr>
                                             <tr class="summary-total">
                                                 <td>Total:</td>
                                                 <td >₹<span id="total"><%= totalAmount %>.00</span></td>
                                             </tr><!-- End .summary-total -->
-                                            <tr class="summary-total">
-                                                <td>Wallet Amount:</td>
-                                                <td>₹<span id="total"><%= user.wallet %></span></td>
-                                            </tr>
                                         </tbody>
                                     </table><!-- End .table table-summary -->
                                     <div class="accordion-summary">
@@ -99,7 +107,7 @@
                                           <div class="mr-2">
                                               <input required type="radio" id="walletpayment" name="payment" value="walletpayment">
                                           </div>
-                                          <a href="" class="d-block text-dark" for="pay1">Wallet Payment</a>
+                                          <a href="" class="d-block text-dark" for="pay1">Wallet </a>
                                       </div>
                                       <div class="d-flex align-items-center">
                                           <div class="mr-2">
@@ -238,7 +246,57 @@
 <% }); } %>
 
 
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <% if(coupon.length > 0){
+              coupon.forEach((coupons, index) => { %>
+            <div class="modal-body d-flex justify-content-between align-items-center">
+                <h6 class="text-dark"><%= coupons.discountType %> &nbsp;&nbsp; : <span id="copy-text-<%= index %>" class="text-success"><%= coupons.code %></span></h6>
+                <h6 class="text-dark">Expiry Date &nbsp;&nbsp; : <span id="expiry-date-<%= index %>" class="text-success"><%= coupons.expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %></span></h6>
+                <button type="submit" class="btn btn-outline-primary-2" data-bs-dismiss="modal" onclick="copyText('<%= index %>')">Copy</button>
+            </div>
+            <% });
+            } %>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
+  
+  function copyText(index) {
+    var codeToCopy = document.getElementById("copy-text-" + index).innerText;
+    var expiryDateToCopy = document.getElementById("expiry-date-" + index).innerText;
+
+    var tempInput = document.createElement("input");
+    tempInput.setAttribute("value", codeToCopy);
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+
+    setTimeout(function() {
+        alert("Coupon code is copied");
+    }, 200);
+
+    var modal = document.getElementById("staticBackdrop");
+    var bootstrapModal = bootstrap.Modal.getInstance(modal);
+    bootstrapModal.hide();
+}
+
+
+
+
+
+
+
 function deleteCheckoutAddress(addId) {
   Swal.fire({
     title: 'Are you sure?',
@@ -387,6 +445,51 @@ function verifyPayment(payment,order){
         }
       }
     })
+  }
+
+
+  function applycoupon(code){
+    event.preventDefault();
+    const amount = document.getElementById('total').innerHTML;
+    $.ajax({
+      method:'post',
+      url:'/applayCoupon',
+      data:{
+        amount:amount,
+        code:code,
+      },success:(response)=>{
+        if(response.user){
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'This coupon already used!'
+          })
+        }else if(response.date){
+          console.log("coupon date expired");
+          Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'date expired!!!'
+              })
+        }else if(response.amountOkey){
+          document.getElementById('discount').innerHTML = response.disAmount
+          document.getElementById('total').innerHTML = response.disTotal
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Discount redeemed',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }else if(response.invalid){
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Invalid Coupon!!!'
+          })
+        }
+      }
+    });
   }
 </script>        
 <%- include('../userLayouts/footer.ejs') %>

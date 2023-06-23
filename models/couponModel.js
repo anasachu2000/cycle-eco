@@ -27,6 +27,10 @@ const coupenSchema = mongoose.Schema({
     startDate:{
         type:Date,
         required:true
+    },
+    is_couponValied:{
+        type:Boolean,
+        default:false,
     }
 })
 

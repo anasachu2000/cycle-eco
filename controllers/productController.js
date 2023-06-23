@@ -6,7 +6,8 @@ const fs = require('fs')
 const path = require('path')
 
 
-//------------ productlist view section
+
+//---------------- ADMIN PRODUCT SHOWING SECTION START
 const loadProductlist = async(req,res,next)=>{
     try{
         const categoryData = await Category.find({})
@@ -20,46 +21,46 @@ const loadProductlist = async(req,res,next)=>{
 
 
 
-//------------- product data storing section
+//---------------- ADMIN PRODUCT ADDING SECTION START
 const insertProduct = async (req,res,next) => {
-    try {
-        const images = [];
-        if (req.files && req.files.length > 0) {
-           for (let i = 0; i < req.files.length; i++) {
-            images.push(req.files[i].filename);
-          }
+  try {
+      const images = [];
+      if (req.files && req.files.length > 0) {
+          for (let i = 0; i < req.files.length; i++) {
+          images.push(req.files[i].filename);
         }
-        const productName = req.body.productName.trim();
-        const stockQuantity = req.body.stockQuantity.trim();
-        const price = req.body.price.trim();
-        if(productName && stockQuantity && price){
-        const product = new Product({
-            productName: productName,
-            brand: req.body.brand,
-            category: req.body.category,
-            description: req.body.description,
-            stockQuantity: stockQuantity,
-            image: images,
-            price: price,
-        });
-        const productData = await product.save(); 
-
-        if (productData) {
-            return res.redirect("/admin/productList");
-        } else {
-            return res.redirect("/admin/productList");
-        }
-      }else{
-        return res.redirect("/admin/productList");
       }
-    } catch (err) {
-      next(err);
+      const productName = req.body.productName.trim();
+      const stockQuantity = req.body.stockQuantity.trim();
+      const price = req.body.price.trim();
+      if(productName && stockQuantity && price){
+      const product = new Product({
+          productName: productName,
+          brand: req.body.brand,
+          category: req.body.category,
+          description: req.body.description,
+          stockQuantity: stockQuantity,
+          image: images,
+          price: price,
+      });
+      const productData = await product.save(); 
+
+      if (productData) {
+          return res.redirect("/admin/productList");
+      } else {
+          return res.redirect("/admin/productList");
+      }
+    }else{
+      return res.redirect("/admin/productList");
     }
+  } catch (err) {
+    next(err);
+  }
 };
 
 
 
-// ------------ Delete product section
+//---------------- ADMIN PRODUCT DELETING SECTION START
 const deleteProduct = async (req,res,next)=> {
   try{
     const id = req.query.id; 
@@ -73,7 +74,7 @@ const deleteProduct = async (req,res,next)=> {
 
 
 
-//  ------------- Edit product  section
+//---------------- ADMIN PRODUCT EDITING SECTION START
 const editproduct = async(req,res,next) => {
     try {
       const id = req.params.id
@@ -88,7 +89,7 @@ const editproduct = async(req,res,next) => {
 
 
 
-//  ------------- Update product  section
+//---------------- ADMIN PRODUCT UPDATING SECTION START
 const updateProduct = async (req,res,next) =>{
   if(req.body.productName.trim() === "" || req.body.category.trim() === "" || req.body.description.trim() === "" || req.body.StockQuantity.trim() === "" || req.body.price.trim() === "") {
       const id = req.params.id
@@ -120,7 +121,7 @@ const updateProduct = async (req,res,next) =>{
  
 
 
-//  ------------- Delete image section
+//---------------- ADMIN PRODUCT IMAGE DELETING SECTION START
 const deleteimage = async(req,res,next)=>{
   try{
     const imgid = req.params.imgid;
@@ -135,7 +136,7 @@ const deleteimage = async(req,res,next)=>{
 
 
 
-//  ------------- Update image section
+//---------------- ADMIN PRODUCT IMAGE UPDATING SECTION START
 const updateimage = async (req,res,next) => {
   try {
     const id = req.params.id
@@ -166,14 +167,41 @@ const updateimage = async (req,res,next) => {
     next(err);
   }
 }
+
+
+
+//---------------- ADMIN OFFER ADDING SECTION START
+const addOffer = async(req,res,next)=>{
+  try {
+      const productId = req.body.id
+      const discountPercentage = req.body.discountPercentage
+      const discountName = req.body.discountName
+      const updateProduct = await Product.findOneAndUpdate(
+          { _id: productId },
+          {
+            $set: {
+              discountName: discountName,
+              discountPercentage: discountPercentage
+            }
+          },
+          { new: true }
+        );  
+       res.redirect("/admin/productList");  
+
+  } catch (error) {
+      
+  }
+}
  
 
+
 module.exports = {
-    loadProductlist,
-    insertProduct,
-    editproduct,
-    deleteProduct,
-    updateProduct,
-    updateimage,
-    deleteimage,
+  loadProductlist,
+  insertProduct,
+  editproduct,
+  deleteProduct,
+  updateProduct,
+  updateimage,
+  deleteimage,
+  addOffer,
 }

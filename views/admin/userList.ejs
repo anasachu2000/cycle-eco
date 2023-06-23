@@ -32,11 +32,11 @@
                                         <%
                                         if(useres[i].is_block === true){ 
                                             %>
-                                        <a href="/admin/unblockUser?id=<%= useres[i]._id %>"><button type="button" class="btn btn-success btn-sm">Unblock</button></a>
+                                        <a href="/admin/unblockUser?id=<%= useres[i]._id %>"><button type="button" class="btn btn-outline-success btn-sm">Unblock</button></a>
                                         <%
                                         }else{
                                             %>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= useres[i]._id %>">Block</a>
+                                        <button type="button" class="btn btn-outline-primary btn-sm"" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= useres[i]._id %>">Block</a>
                                         <%
                                         }
                                         %>

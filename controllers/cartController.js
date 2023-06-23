@@ -4,7 +4,7 @@ const Cart = require('../models/cartModel')
 
 
 
-// ---------- Cart loading section start
+//---------------- USER CART SHOWING SECTION START
 const loadCart = async(req,res,next)=>{
   try {
     let id = req.session.user_id;
@@ -47,6 +47,7 @@ const loadCart = async(req,res,next)=>{
        
  
 
+//---------------- USER CART ADDING SECTION START
 const addToCart = async (req,res,next) => {
   try {
     const userId = req.session.user_id;
@@ -79,6 +80,11 @@ const addToCart = async (req,res,next) => {
     }
 
     const cartProduct = cartData.products.find((product) => product.productId.toString() === productId.toString());
+     
+    const discount =  productData.discountPercentage;          
+    const price =  productData.price 
+    const discountAmount = Math.round((price*discount)/100)
+    const total = price - discountAmount
 
     if (cartProduct) {
       await Cart.updateOne(
@@ -86,15 +92,15 @@ const addToCart = async (req,res,next) => {
         {
           $inc: {
             "products.$.count": 1,
-            "products.$.totalPrice": productData.price,
+            "products.$.totalPrice": total,
           },
         }
       );
     } else {
       cartData.products.push({
         productId: productId,
-        productPrice: productData.price,
-        totalPrice: productData.price,
+        productPrice: total,
+        totalPrice: total,
       });
       await cartData.save();
     }
@@ -107,7 +113,7 @@ const addToCart = async (req,res,next) => {
 
 
 
-// ---------- Change product quantity in cart section
+//---------------- USER CART PRODUCT QUANTITY CHANGING SECTION START
 const changeProductCount = async (req,res,next) => {
   try {
     const userData = req.session.user_id;
@@ -116,15 +122,13 @@ const changeProductCount = async (req,res,next) => {
     count = parseInt(count);
     const cartData = await Cart.findOne({ userId: userData });
     const product = cartData.products.find((product) => product.productId === proId);
-    const productData = await Product.findOne({ _id: proId });
-    
+    const productData = await Product.findOne({ _id: proId });  
     const productQuantity = productData.stockQuantity
     const updatedCartData = await Cart.findOne({ userId: userData });
     const updatedProduct = updatedCartData.products.find((product) => product.productId === proId);
     const updatedQuantity = updatedProduct.count;
     
     if (count > 0) {
-      // Quantity is being increased
       if (updatedQuantity + count > productQuantity) {
         res.json({ success: false, message: 'Quantity limit reached!' });
         return;
@@ -150,12 +154,16 @@ const changeProductCount = async (req,res,next) => {
     const updateCartData = await Cart.findOne({ userId: userData });
     const updateProduct = updateCartData.products.find((product) => product.productId === proId);
     const updateQuantity = updateProduct.count;
-    
-    const price = updateQuantity * productData.price;
+
+    const discount =  productData.discountPercentage;          
+    const price =  productData.price 
+    const discountAmount = Math.round((price*discount)/100)
+    const total = price - discountAmount
+    const prices = updateQuantity * total;
 
     await Cart.updateOne(
       { userId: userData, "products.productId": proId },
-      { $set: { "products.$.totalPrice": price } }
+      { $set: { "products.$.totalPrice": prices } }
     ); 
     res.json({ success: true });
   } catch (err) {
@@ -165,7 +173,7 @@ const changeProductCount = async (req,res,next) => {
 
 
 
-// ---------- delete cart section
+//---------------- USER CART DELETING SECTION START
 const deletecart  = async (req,res,next) =>{
   try {
     const userData = req.session.user_id;
@@ -186,9 +194,10 @@ const deletecart  = async (req,res,next) =>{
 }
 
 
+
 module.exports = {
-    loadCart,
-    addToCart,
-    changeProductCount,
-    deletecart,
+  loadCart,
+  addToCart,
+  changeProductCount,
+  deletecart,
 }

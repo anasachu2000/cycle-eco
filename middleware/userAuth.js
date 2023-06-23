@@ -1,4 +1,7 @@
 const User = require('../models/userModel')
+
+
+
 const isLogin = async(req,res,next)=>{
     try{
         if(req.session.user_id){
@@ -10,6 +13,8 @@ const isLogin = async(req,res,next)=>{
         console.log(error.message);
     }
 }
+
+
 
 const blocked = async(req,res,next)=>{
     try{
@@ -30,6 +35,8 @@ const blocked = async(req,res,next)=>{
    
 }
 
+
+
 const isLogout = async(req,res,next)=>{
     try{
         if(req.session.user_id){
@@ -41,6 +48,7 @@ const isLogout = async(req,res,next)=>{
         console.log(error.message);
     }
 }
+
 
 
 module.exports = {

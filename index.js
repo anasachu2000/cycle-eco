@@ -1,7 +1,9 @@
 const env = require('dotenv')
 env.config();
-const mongoose = require('mongoose');
+
+
 //-----data base connection----------//
+const mongoose = require('mongoose');
 mongoose.connect(process.env.mongo);
 
 
@@ -12,9 +14,12 @@ const session = require('express-session');
 const path = require('path');
 
 
+
 //--------public file connection----------//
 const publicPath = path.join(__dirname,'public');
 app.use(express.static(publicPath));
+
+
 
 app.use(session({
     secret: process.env.sessionSecret,
@@ -43,6 +48,7 @@ app.use('/',userRoutes);
 //--------Admin routes-----------//
 const adminRoutes = require('./routes/adminRoutes')
 app.use('/admin',adminRoutes);
+
 
 
 app.listen(process.env.port,()=>{

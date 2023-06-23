@@ -10,54 +10,54 @@ let otp
 
 
 
-//-------- Pasword security section -----------//
+//---------------- USER SECURE PASSWORD GENARATING SECTION START
 const securePassword = async (password) =>{
-    try{
-        const passwordHash = await bcrypt.hash(password,10);
-        return passwordHash;
-    }
-    catch(error){
-        console.log(error.message);
-    }
+  try{
+      const passwordHash = await bcrypt.hash(password,10);
+      return passwordHash;
+  }
+  catch(error){
+      console.log(error.message);
+  }
 }
 
 
 
-//---------- Load register page ----------//
+//---------------- USER REGISTRATION PAGE SHOWING SECTION START
 const loadRegister = async(req,res,next)=>{
-    try{
-        res.render('register');
-    }catch(err){
-        next(err);
-    }
-}
-
-
-
-//---------- Load login page ----------//
-const loadLogin  = async(req,res,next)=>{
-    try{
-        res.render('login')
-    }
-    catch(err){
-        next(err);
-    }
-}
-
-
-
-//---------- load otp verification page ----------//
-const loadOtpVerification = async(req,res,next)=>{
-    try{
-        res.render('otpVerificaton');
-    }catch(err){
+  try{
+      res.render('register');
+  }catch(err){
       next(err);
-    }
+  }
 }
 
 
 
-//-------- User registration section  -----------//
+//---------------- USER LOGIN PAGE SHOWING SECTION START
+const loadLogin  = async(req,res,next)=>{
+  try{
+      res.render('login')
+  }
+  catch(err){
+      next(err);
+  }
+}
+
+
+
+//---------------- USER OTP VERIFICATION PAGE SHOWING SECTION START
+const loadOtpVerification = async(req,res,next)=>{
+  try{
+      res.render('otpVerificaton');
+  }catch(err){
+    next(err);
+  }
+}
+
+
+
+//---------------- USER REGISTRATION DATA ADDING SECTION START
 let email
 const schema = new passwordValidator();
 schema
@@ -113,7 +113,7 @@ const insertUser = async (req, res, next) => {
 
 
 
-//-------- User verification section  -----------//
+//---------------- USER SEND EMAIL VERIFICATION SECTION START
 const sendVerifyMail = async (name, email, otp) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -141,87 +141,87 @@ const sendVerifyMail = async (name, email, otp) => {
 
 
 
-//-------- Email verification section  -----------//
+//---------------- USER EMAIL VERIFICATION SECTION START
 const verifyEmail = async (req,res,next)=>{
-    const otp2= req.body.otp;
-    try { 
-        if(otp2==otp){
-            const UserData = await User.findOneAndUpdate({email:email},{$set:{is_verified:1}});
-            if(UserData){
-              res.redirect("/home");
-            }
-            else{
-                console.log('something went wrong');
-            }
-        }
-        else{
-            res.render('otpVerificaton',{message:"Please Check the OTP again!"})
-        }
-    } catch (err) {
-      next(err);
-    }
+  const otp2= req.body.otp;
+  try { 
+      if(otp2==otp){
+          const UserData = await User.findOneAndUpdate({email:email},{$set:{is_verified:1}});
+          if(UserData){
+            res.redirect("/home");
+          }
+          else{
+              console.log('something went wrong');
+          }
+      }
+      else{
+          res.render('otpVerificaton',{message:"Please Check the OTP again!"})
+      }
+  } catch (err) {
+    next(err);
   }
+}
 
  
   
 //-------- User verification section  -----------//
 const verifyLogin = async (req,res,next)=>{
-    try{
-        const email = req.body.email
-        const password = req.body.password
-        const userData = await User.findOne({email:email});
-        if(userData){
-            const passwordMatch = await bcrypt.compare(password,userData.password);
-            if(passwordMatch){
-                if(userData.is_verified === true){
-                    if(userData.is_block === true){
-                        res.render('login',{message:'user is blocked'})
-                    
-                    }else{
-                        req.session.user_id = userData._id;
-                        res.redirect('/home')
-                    }
-                }else{
-                    res.render('login',{message:'Email and pasword is incorrect'})
-                }
-            }
-            else{
-                res.render('login',{message:'Email and pasword is incorrect'})
-            }
-        }
-        else{
-            res.render('login',{message:'Email and pasword is incorrect'})
-        }
-    }
-    catch(err){
-      next(err);
-    }
+  try{
+      const email = req.body.email
+      const password = req.body.password
+      const userData = await User.findOne({email:email});
+      if(userData){
+          const passwordMatch = await bcrypt.compare(password,userData.password);
+          if(passwordMatch){
+              if(userData.is_verified === true){
+                  if(userData.is_block === true){
+                      res.render('login',{message:'user is blocked'})
+                  
+                  }else{
+                      req.session.user_id = userData._id;
+                      res.redirect('/home')
+                  }
+              }else{
+                  res.render('login',{message:'Email and pasword is incorrect'})
+              }
+          }
+          else{
+              res.render('login',{message:'Email and pasword is incorrect'})
+          }
+      }
+      else{
+          res.render('login',{message:'Email and pasword is incorrect'})
+      }
+  }
+  catch(err){
+    next(err);
+  }
 }
 
 
 
 //-------- Home page loading section  -----------//
 const loadHome = async (req, res,next) => {
-    try {
-      const session = req.session.user_id;
-      const productData = await Product.find()
-      
-      
-      if (!session) {
-        return res.render("home",{session:session,product:productData});
-      }
-  
-      const userData = await User.findById({_id:req.session.user_id});
-      if (userData) {
-        return res.render("home", { user: userData,session,product:productData});
-      } else {
-        const session = null
-        return res.render("home",{session,product:productData});
-      }
-    } catch (err) {
-      next(err)
+  try {
+    const session = req.session.user_id;
+    const productData = await Product.find({is_delete:false})
+    
+    
+    if (!session) {
+      return res.render("home",{session:session,product:productData});
     }
-  };
+
+    const userData = await User.findById({_id:req.session.user_id});
+    if (userData) {
+      return res.render("home", { user: userData,session,product:productData});
+    } else {
+      const session = null
+      return res.render("home",{session,product:productData});
+    }
+  } catch (err) {
+    next(err)
+  }
+};
 
 
 
@@ -241,19 +241,54 @@ const userLogout = async (req,res,next) => {
 const loadProducts = async (req,res,next)=>{
     try {
         const session = req.session.user_id;
-        const productData = await Product.find()
+        const productData = await Product.find({is_delete:false})
         const categoryData = await Category.find({is_delete:false});
         
+
+        const page = parseInt(req.query.page) || 1; 
+        const limit = 4; 
+        const startIndex = (page - 1) * limit; 
+        const endIndex = page * limit; 
+        const productCount = productData.length;
+        const totalPages = Math.ceil(productCount / limit); 
+        const paginatedProducts = productData.slice(startIndex, endIndex); 
+
+        
         if (!session) {
-          return res.render("product",{session:session,category:categoryData,product:productData});
+          return res.render("product",
+          {
+            session:session,
+            category:categoryData,
+            product:productData, 
+            product: paginatedProducts, 
+            currentPage: page,
+            totalPages: totalPages 
+          });
         }
     
         const userData = await User.findById({_id:req.session.user_id});
         if (userData) {
-          return res.render("product", { user: userData,session,category:categoryData,product:productData});
+          return res.render("product", 
+          { 
+            user:userData,
+            session,
+            category:categoryData,
+            product:productData, 
+            product:paginatedProducts, 
+            currentPage:page,totalPages: 
+            totalPages 
+          });
         } else {
           const session = null
-          return res.render("product",{session,category:categoryData,product:productData});
+          return res.render("product",
+          {
+            session,
+            category:categoryData,
+            product:productData, 
+            product: paginatedProducts, 
+            currentPage:page,
+            totalPages: totalPages 
+          });
         }
       } catch (err) {
         next(err);
@@ -296,29 +331,44 @@ const loadSingleProduct = async (req,res,next) => {
 
 
 
-const searchProduct = async (req,res,next)=>{
-  try{
-     const search = req.body.search;
-     const session = req.session.user_id;
-     const userData = await User.findById(session)
-     const categoryData = await Category.find({is_delete:false});
-     const productData = await Product.find(
-     {$or: [
-      {productName:{$regex:".*" + search + ".*", $options:'i'}},
-      {brand:{$regex:".*" + search + ".*", $options:'i'}},
-      {category:{$regex:".*" + search + ".*", $options:'i'}},]}
-      );
-     
-     if(productData.length > 0){
-      res.render('product',{session,category:categoryData,product:productData,user:userData});
-     }else{
-      res.render('product',{session,category:categoryData,product:productData,user:userData});
-     }
+const searchProduct = async (req, res, next) => {
+  try {
+    const search = req.body.search;
+    const session = req.session.user_id;
+    const userData = await User.findById(session);
+    const categoryData = await Category.find({ is_delete: false });
 
-  }catch(err){
+    const currentPage = req.query.page || 1;
+    const itemsPerPage = 10; 
+
+    const searchQuery = {
+      $or: [
+        { productName: { $regex: ".*" + search + ".*", $options: 'i' } },
+        { brand: { $regex: ".*" + search + ".*", $options: 'i' } },
+        { category: { $regex: ".*" + search + ".*", $options: 'i' } },
+      ],
+    };
+
+    const totalItems = await Product.countDocuments(searchQuery);
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const productData = await Product.find(searchQuery)
+      .skip((currentPage - 1) * itemsPerPage)
+      .limit(itemsPerPage);
+
+    res.render('product', {
+      session,
+      category: categoryData,
+      product: productData,
+      user: userData,
+      currentPage,
+      totalPages,
+    });
+  } catch (err) {
     next(err);
   }
-}
+};
+
 
 
 
@@ -330,11 +380,38 @@ const filterCategory = async (req,res,next)=>{
     const userData = await User.findById(session)
     const productData = await Product.find({category:id,is_delete:false})
 
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 4; 
+    const startIndex = (page - 1) * limit; 
+    const endIndex = page * limit;
+    const productCount = productData.length;
+    const totalPages = Math.ceil(productCount / limit);
+    const paginatedProducts = productData.slice(startIndex, endIndex); 
+
+
     if(categoryData.length > 0){
-      res.render('product',{product:productData,session,category:categoryData,user:userData});
+      res.render('product',
+      {
+        product:productData,
+        session,
+        category:categoryData,
+        user:userData,
+        product: paginatedProducts,
+        currentPage:page,
+        totalPages: totalPages 
+      });
     }else{
-      res.render('product',{product:[],session,category:categoryData,user:userData});
-      
+      res.render('product',
+      {
+        product:[],
+        session,
+        category:categoryData,
+        user:userData,
+        product: paginatedProducts, 
+        currentPage: page,
+        totalPages: totalPages 
+      });
     }
   }catch(err){
     next(err);
@@ -343,37 +420,55 @@ const filterCategory = async (req,res,next)=>{
 
 
 
-const priceSort = async (req,res,next)=>{
-  try{
+const priceSort = async (req, res, next) => {
+  try {
     const id = req.params.id;
     const session = req.session.user_id;
     const userData = await User.findById(session);
-    const categoryData = await Category.find({is_delete:false});
-    const sortData = await Product.find().sort({price:id});
-   
-    if(sortData){
-      res.render('product',{product:sortData,session,category:categoryData,user:userData});
-    }else{
-      res.redirect('/product')
+    const categoryData = await Category.find({ is_delete: false });
+    const sortData = await Product.find().sort({ price: id });
+
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 4;
+    const startIndex = (page - 1) * limit; 
+    const endIndex = page * limit;
+    const productCount = sortData.length;
+    const totalPages = Math.ceil(productCount / limit);
+    const paginatedProducts = sortData.slice(startIndex, endIndex);
+
+
+    if (paginatedProducts.length > 0) {
+      res.render('product', {
+        product: paginatedProducts,
+        session,
+        category: categoryData,
+        user: userData,
+        currentPage: page,
+        totalPages: totalPages,
+      });
+    } else {
+      res.redirect('/product');
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
-}
+};
+
 
 module.exports = {
-    loadHome,
-    loadProducts,
-    loadSingleProduct,
-    loadRegister,
-    loadLogin,
-    loadOtpVerification,
-    sendVerifyMail,
-    verifyEmail,
-    insertUser,
-    verifyLogin,
-    userLogout,
-    searchProduct,
-    filterCategory,
-    priceSort,
+  loadHome,
+  loadProducts,
+  loadSingleProduct,
+  loadRegister,
+  loadLogin,
+  loadOtpVerification,
+  sendVerifyMail,
+  verifyEmail,
+  insertUser,
+  verifyLogin,
+  userLogout,
+  searchProduct,
+  filterCategory,
+  priceSort,
 }

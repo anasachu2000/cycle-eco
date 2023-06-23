@@ -1,11 +1,88 @@
 <%- include('../adminLayouts/header.ejs') %>
-<%- include('../adminLayouts/navbar.ejs') %>
- 
-
-<h1>Dashboard is working</h1>
+  <%- include('../adminLayouts/navbar.ejs') %>
 
 
+   <!-- Sale & Revenue Start -->
+   <div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="bi bi-person-fill fa-3x text-light"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Users</p>
+                    <h6 class="mb-0"><%= users.length %> Active users</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="bi bi-bar-chart-fill fa-3x text-light"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Sales</p>
+                    <h6 class="mb-0">$ <%=totalSale%>.00</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="bi bi-bicycle fa-3x text-light"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Products</p>
+                    <h6 class="mb-0"><%= totalProducts.length %>  Products added</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="bi bi-truck fa-3x text-light"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Ordes</p>
+                    <h6 class="mb-0"><%= totalOrders.length %> Orders placed</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sale & Revenue End -->
+
+  <!-- Chart Start -->
+  <div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+      <div class="col-sm-12 col-xl-6">
+        <div class="bg-secondary rounded h-100 p-4">
+          <h6 class="mb-4">Single Bar Chart</h6>
+          <canvas id="bar-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Chart End -->
 
 
 
-<%- include('../adminLayouts/footer.ejs') %>
+  <script>
+    $(document).ready(function() {
+      // Single Bar Chart
+      var ctx4 = $("#bar-chart").get(0).getContext("2d");
+      var myChart4 = new Chart(ctx4, {
+        type: "bar",
+        data: {
+          labels: ["Cash on delivery", "Onile payment", "Wallet"],
+          datasets: [{
+            backgroundColor: [
+            "rgba(46, 204, 113, 0.7)", // Green
+            "rgba(241, 196, 15, 0.7)", // Yellow
+            "rgba(231, 76, 60, 0.7)"  // Red
+            ],
+            data: ['<%= totalCod %>','<%= totalOnline %>', '<%= totalWallet %>']
+          }]
+        },
+        options: {
+          responsive: true
+        }
+      });
+    });
+  </script>
+
+  <!-- Include footer -->
+  <%- include('../adminLayouts/footer.ejs') %>

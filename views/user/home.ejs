@@ -51,7 +51,23 @@
                                             </div><!-- End .product-cat -->
                                             <h3 class="product-title"><a href="/product"><%= product[i].productName%></a></h3><!-- End .product-title -->
                                             <div class="product-price">
-                                                <span class="new-price">₹<%=product[i].price%></span>
+                                                <% 
+                                
+                                                    const discount =  product[i].discountPercentage; 
+                            
+                                                    const price =  product[i].price 
+                            
+                                                    const discountAmount = Math.round((price*discount)/100)
+                            
+                                                    const total = price - discountAmount
+
+                                                %>
+                                            <% if(discountAmount <= 0) {%>
+                                                ₹<%= product[i].price %>.00
+                                            <% }else{ %>
+                                                <del class="text-danger">₹<%= product[i].price %>.00</del>
+                                                <span class="new-price">₹<%= total %>.00</span>
+                                            <% } %> 
                                             </div><!-- End .product-price -->
                                         </div><!-- End .product-body -->
                                     </div><!-- End .product -->
@@ -223,7 +239,23 @@
                                             </div><!-- End .product-cat -->
                                             <h3 class="product-title"><a href="/product"><%= product[i].productName%></a></h3><!-- End .product-title -->
                                             <div class="product-price">
-                                                <span class="new-price">₹<%=product[i].price%></span>
+                                                <% 
+                                
+                                                    const discount =  product[i].discountPercentage; 
+                            
+                                                    const price =  product[i].price 
+                            
+                                                    const discountAmount = Math.round((price*discount)/100)
+                            
+                                                    const total = price - discountAmount
+
+                                                %>
+                                                <% if(discountAmount <= 0) {%>
+                                                    ₹<%= product[i].price %>.00
+                                                <% }else{ %>
+                                                    <del class="text-danger">₹<%= product[i].price %>.00</del>
+                                                    <span class="new-price">₹<%= total %>.00</span>
+                                                <% } %> 
                                             </div><!-- End .product-price -->
                                         </div><!-- End .product-body -->
                                     </div><!-- End .product -->

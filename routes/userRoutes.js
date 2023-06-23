@@ -1,5 +1,8 @@
 const express = require('express')
 const userRoute = express();
+
+
+
 const auth = require('../middleware/userAuth');
 const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController');
@@ -7,13 +10,17 @@ const checkoutController  = require('../controllers/checkoutController');
 const addressControler  = require('../controllers/addressController')
 const orderController = require('../controllers/orderController');
 const wishlistController = require('../controllers/wishlistController');
+const couponController = require('../controllers/couponController');
 const errorHandler = require('../middleware/errorHandling');
+
+
+
 
 userRoute.set('view engine','ejs');
 userRoute.set('views','./views/user');
 
 
-
+//------------------ USER LOGIN AND REGISTER SECTION ROUTE START
 userRoute.get('/login',auth.isLogout,userController.loadLogin);
 userRoute.get('/register',auth.isLogout,userController.loadRegister);
 userRoute.get('/otpVerificaton',userController.loadOtpVerification);
@@ -24,6 +31,7 @@ userRoute.post('/otpVerificaton',userController.verifyEmail);
 
 
 
+//------------------ HOME ROUTE SECTION START
 userRoute.get('/',userController.loadHome);
 userRoute.get('/home',userController.loadHome);
 userRoute.get('/product',userController.loadProducts);
@@ -31,7 +39,7 @@ userRoute.get('/singleProduct/:id',userController.loadSingleProduct);
 
 
 
-//------------------ Cart route start
+//------------------ CART ROUTE SECTION START
 userRoute.get('/cart',auth.blocked,auth.isLogin,cartController.loadCart);
 userRoute.post('/addToCart',cartController.addToCart);
 userRoute.post('/changeQuantity',cartController.changeProductCount);
@@ -39,7 +47,7 @@ userRoute.post('/deletecart',cartController.deletecart);
 
 
 
-//------------------ Checkout route start
+//------------------ CHECKOUT ROUTE SECTION START
 userRoute.get('/checkout',auth.blocked,auth.isLogin,checkoutController.loadcheckout);
 userRoute.post('/checkOutAddressList',checkoutController.insertCheckoutAddresss);
 userRoute.get('/editcheckoutAddress/:id',auth.blocked,auth.isLogin,checkoutController.editCheckoutAddress);
@@ -50,7 +58,7 @@ userRoute.post('/verifyPayment',orderController.verifyPayment);
 
 
 
-//------------------ Address route start
+//------------------ ADDRESS ROUTE SECTION START
 userRoute.get('/userdasboard',auth.blocked,auth.isLogin,addressControler.loadUserdashboard);
 userRoute.get('/editUserData/:id',auth.isLogin,auth.blocked,addressControler.editUserDashboad);
 userRoute.post('/updateUserData',addressControler.updateUserDashboard);
@@ -65,14 +73,15 @@ userRoute.post('/cancelOrder',addressControler.cancelOrder);
 userRoute.post('/returnOrder',addressControler.returnOrder);
 
 
-//----------------- Search and filter section start
+
+//----------------- SEARCH AND FILTER ROUTE SECTION START
 userRoute.post('/form',userController.searchProduct);
 userRoute.get('/filterCategory/:id',userController.filterCategory);
 userRoute.get('/priceSort/:id',userController.priceSort);
 
 
 
-//---------------- Wishlist section start
+//---------------- WISHLIST ROUTE SECTION START
 userRoute.get('/wishlist',auth.blocked,auth.isLogin,wishlistController.loadWhislist);
 userRoute.post('/addToWhislist',wishlistController.addToWhislist);
 userRoute.post('/deleteWhislist',wishlistController.deleteWhislist);
@@ -80,6 +89,11 @@ userRoute.get('/deleteSingleWishlist/:id',auth.blocked,auth.isLogin,wishlistCont
 
 
 
+userRoute.post('/applayCoupon',couponController.applayCoupon);
+
+
 userRoute.use(errorHandler);
+
+
 
 module.exports = userRoute; 
