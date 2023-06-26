@@ -9,14 +9,35 @@ const path = require('path')
 
 //---------------- ADMIN PRODUCT SHOWING SECTION START
 const loadProductlist = async(req,res,next)=>{
-    try{
-        const categoryData = await Category.find({})
-        const adminData = await User.findById({ _id: req.session.auser_id})
-        const productData = await Product.find({is_delete:false});
-        res.render('productList',{admin:adminData,activePage: 'productList',category:categoryData,product:productData});
-    }catch(err){
-      next(err);
-    }
+  try{
+      const categoryData = await Category.find({})
+      const adminData = await User.findById({ _id: req.session.auser_id})
+      const productData = await Product.find({is_delete:false});
+      
+
+      const page = parseInt(req.query.page) || 1; 
+      const limit = 4; 
+      const startIndex = (page - 1) * limit; 
+      const endIndex = page * limit; 
+      const productCount = productData.length;
+      const totalPages = Math.ceil(productCount / limit); 
+      const paginatedCategory = productData.slice(startIndex, endIndex);
+
+
+
+      res.render('productList',
+      {
+        admin:adminData,
+        activePage:'productList',
+        category:categoryData,
+        product:productData,
+        product: paginatedCategory, 
+        currentPage: page,
+        totalPages: totalPages,
+      });
+  }catch(err){
+    next(err);
+  }
 }
 
 

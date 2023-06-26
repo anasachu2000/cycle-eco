@@ -8,7 +8,6 @@ const categoryController = require('../controllers/categoryController');
 const productController = require('../controllers/productController');
 const adminOrderController = require('../controllers/adminOrderController');
 const couponController = require('../controllers/couponController');
-const saleReportController = require('../controllers/salesReportController');
 const update = require('../configuration/multer');
 const errorHandler = require('../middleware/errorHandling');
 
@@ -74,7 +73,8 @@ adminRoute.post('/addOffer',productController.addOffer);
 
 
 
-adminRoute.get('/saleReport',saleReportController.loadSalesReport);
+//---------------- SALES REPORT ROUTE SECTION START
+adminRoute.get('/saleReport',adminController.loadSalesReport);
 
 
 

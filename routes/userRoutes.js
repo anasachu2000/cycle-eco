@@ -13,7 +13,7 @@ const wishlistController = require('../controllers/wishlistController');
 const couponController = require('../controllers/couponController');
 const errorHandler = require('../middleware/errorHandling');
 
-
+const PDFDocument = require('pdfkit');
 
 
 userRoute.set('view engine','ejs');
@@ -91,6 +91,9 @@ userRoute.get('/deleteSingleWishlist/:id',auth.blocked,auth.isLogin,wishlistCont
 
 userRoute.post('/applayCoupon',couponController.applayCoupon);
 
+
+
+  
 
 userRoute.use(errorHandler);
 

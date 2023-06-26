@@ -31,6 +31,12 @@
                             <div class="col-6">
                                 <div class="product product-7 text-center">
                                     <figure class="product-media">
+                                        <% if(product[i].discountPercentage > 0){ %>
+                                            <span class="product-label label-new"><%= product[i].discountName %></span>
+                                       <% }else{ %>
+
+                                       <% } %>
+                                       
                                         <a href="/singleProduct/<%= product[i]._id%>">
                                             <img src="/adminAssets/adminImages/<%= product[i].image[0] %>" alt="Product image" class="product-image">
                                         </a>

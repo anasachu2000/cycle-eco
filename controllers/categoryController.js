@@ -12,7 +12,26 @@ const loadCategory = async (req, res,next) => {
   try {
     const adminData = await User.findById(req.session.auser_id);  
     const categoryData = await Category.find({is_delete:false});
-    res.render('categoryList', { admin: adminData, activePage: 'categoryList', category: categoryData, message: message || '' });
+
+
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 4; 
+    const startIndex = (page - 1) * limit; 
+    const endIndex = page * limit; 
+    const categoryCount = categoryData.length;
+    const totalPages = Math.ceil(categoryCount / limit); 
+    const paginatedCategory = categoryData.slice(startIndex, endIndex); 
+    
+    res.render('categoryList', 
+    { 
+      admin: adminData,
+      activePage:'categoryList',
+      category:categoryData, 
+      category: paginatedCategory, 
+      currentPage: page,
+      totalPages: totalPages,
+      message: message || '' 
+    });
   } catch (err) {
     next(err)
   }

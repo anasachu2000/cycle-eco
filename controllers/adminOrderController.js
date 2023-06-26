@@ -9,10 +9,36 @@ const loadOrderList = async (req,res,next)=>{
     const adminData = await User.findById(req.session.auser_id);  
     const DeletePending = await Order.deleteMany({status:'pending'})
     const orderData = await Order.find().populate("products.productId")
+
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 4; 
+    const startIndex = (page - 1) * limit; 
+    const endIndex = page * limit; 
+    const orderCount = orderData.length;
+    const totalPages = Math.ceil(orderCount / limit); 
+    const paginatedOrder = orderData.slice(startIndex, endIndex);
+
+
     if(orderData.length > 0){
-      res.render('orderList', { admin: adminData, activePage: 'orderList',order:orderData});
+      res.render('orderList', 
+      { 
+        admin: adminData, 
+        activePage: 'orderList',
+        order:orderData,
+        order: paginatedOrder, 
+        currentPage: page,
+        totalPages: totalPages,
+      });
     }else{
-      res.render('orderList', { admin: adminData, activePage: 'orderList',order:[]});
+      res.render('orderList', 
+      { 
+        admin: adminData, 
+        activePage: 'orderList',
+        order:[],
+        order: paginatedOrder, 
+        currentPage: page,
+        totalPages: totalPages,
+      });
     }
     
   }catch(err){
@@ -28,7 +54,26 @@ const loadSingleOrderList = async (req,res,next)=>{
     const id = req.params.id;
     const adminData = await User.findById(req.session.auser_id);  
     const orderData = await Order.findOne({_id:id}).populate("products.productId")
-    res.render('orderDetails', { admin: adminData, activePage: 'orderList',order:orderData});
+
+
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 4; 
+    const startIndex = (page - 1) * limit; 
+    const endIndex = page * limit; 
+    const orderCount = orderData.products.length;
+    const totalPages = Math.ceil(orderCount / limit); 
+    const paginatedOrder = orderData.products.slice(startIndex, endIndex);;
+
+
+    res.render('orderDetails', 
+    { 
+      admin: adminData, 
+      activePage: 'orderList',
+      order:orderData,
+      orders: paginatedOrder, 
+      currentPage: page,
+      totalPages: totalPages,
+    });
   }catch(err){
     next(err);
   }

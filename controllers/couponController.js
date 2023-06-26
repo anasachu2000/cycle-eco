@@ -8,7 +8,25 @@ const loadCopon = async (req,res,next) => {
     try{
         const adminData = await User.findById(req.session.auser_id);
         const couponData = await Coupon.find({});  
-        res.render('couponList', { admin: adminData,activePage: 'couponList',coupon:couponData});
+
+        const page = parseInt(req.query.page) || 1; 
+        const limit = 4; 
+        const startIndex = (page - 1) * limit; 
+        const endIndex = page * limit; 
+        const couponCount = couponData.length;
+        const totalPages = Math.ceil(couponCount / limit); 
+        const paginatedCoupon = couponData.slice(startIndex, endIndex);
+
+        res.render('couponList', 
+        { 
+            admin: adminData,
+            activePage:'couponList',
+            coupon:couponData,
+            coupon: paginatedCoupon, 
+            currentPage: page,
+            totalPages: totalPages,
+
+        });
     }catch(err){
         next(err)
     }

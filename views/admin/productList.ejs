@@ -95,6 +95,25 @@
                           <% } %>
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation">
+                      <ul class="pagination justify-content-center">
+                          <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                              <a class="page-link page-link-prev" href="?page=<%= currentPage - 1 %>" aria-label="Previous" tabindex="-1" aria-disabled="true">
+                                  <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                              </a>
+                          </li>
+                          <% for (let i = 1; i <= totalPages; i++) { %>
+                              <li class="page-item <%= currentPage === i ? 'active' : '' %>" aria-current="page">
+                                  <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                              </li>
+                          <% } %>
+                          <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                              <a class="page-link page-link-next" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                  Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                              </a>
+                          </li>
+                      </ul>
+                  </nav>
                 </div>
             </div>
         </div>
@@ -144,7 +163,7 @@
             <input class="form-control bg-dark" accept="Image/*" name="image" type="file" id="formFileMultiple" multiple required>
           </div>
           <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Stock Quantity</label>
+            <label for="recipient-name"  class="col-form-label">Stock Quantity</label>
             <input type="text" class="form-control" id="recipient-name" name="stockQuantity" required>
           </div>
           <div class="mb-3">
@@ -256,6 +275,40 @@
       }
     });
   });
+
+
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const stockQuantityInput = document.getElementById("stockQuantityInput");
+    const priceInput = document.getElementById("priceInput");
+
+    // Add event listener for form submit event
+    document.querySelector("form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      // Validate stock quantity
+      const stockQuantity = stockQuantityInput.value.trim();
+      if (stockQuantity === "") {
+        alert("Please enter a valid stock quantity.");
+        stockQuantityInput.focus();
+        return;
+      }
+
+      // Validate price
+      const price = priceInput.value.trim();
+      if (price === "" || isNaN(price)) {
+        alert("Please enter a valid price.");
+        priceInput.focus();
+        return;
+      }
+
+      // Submit the form if validation passes
+      this.submit();
+    });
+  });
+
+
 </script>
 
 <%- include('../adminLayouts/footer.ejs') %>
