@@ -13,7 +13,6 @@ const wishlistController = require('../controllers/wishlistController');
 const couponController = require('../controllers/couponController');
 const errorHandler = require('../middleware/errorHandling');
 
-const PDFDocument = require('pdfkit');
 
 
 userRoute.set('view engine','ejs');
@@ -89,11 +88,15 @@ userRoute.get('/deleteSingleWishlist/:id',auth.blocked,auth.isLogin,wishlistCont
 
 
 
+//---------------- COUPON APPLAY ROUTE SECTION START
 userRoute.post('/applayCoupon',couponController.applayCoupon);
 
 
 
+//---------------- INVOICE DOWNLODING ROUTE SECTION START
+userRoute.get('/invoiceDownlode/:id',addressControler.loadinvoice);
   
+
 
 userRoute.use(errorHandler);
 

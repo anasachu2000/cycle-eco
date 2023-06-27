@@ -7,6 +7,7 @@ const razorpay = require('razorpay');
 
 
 
+
 var instance = new razorpay({
   key_id: process.env.Razorpay_Key_Id,
   key_secret: process.env.Razorpay_Key_Secret,
@@ -120,6 +121,9 @@ const verifyPayment = async (req,res,next)=>{
     next(err);
   }
 }
+
+
+
 
 
 

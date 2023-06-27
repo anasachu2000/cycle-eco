@@ -174,7 +174,7 @@ const loadDashbord = async (req, res, next) => {
 //---------------- ADMIN SALES REPORT SHOWING SECTION START
 const loadSalesReport = async (req,res,next) =>{
   try{
-    const adminData = await User.findById(req.session.auser_id);  
+    const adminData = await User.findById(req.session.auser_id); 
     const order = await Order.aggregate([
       { $unwind: "$products" },
       { $match: { 'products.status': 'Delivered' } },
@@ -211,6 +211,19 @@ const loadSalesReport = async (req,res,next) =>{
       currentPage: page,
       totalPages: totalPages,
     });
+
+  }catch(err){
+    next(err)
+  }
+}
+
+
+
+
+const salesReportPdf = async (req,res,next) =>{
+  try{
+    const id = req.params.id;
+    console.log(id)
 
   }catch(err){
     next(err)
@@ -294,6 +307,7 @@ module.exports = {
   verifyLogin,
   loadDashbord,
   loadSalesReport,
+  salesReportPdf,
   adminLogout,
   loadUserList,
   block,

@@ -2,7 +2,10 @@ const User = require('../models/userModel');
 const Address = require('../models/addressModel');
 const Order = require('../models/orderModel');
 const Product = require('../models/productModal');
-
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path')
+const ejs = require('ejs')
 
 
 //---------------- DASHBOARD SHOWING SECTION START
@@ -312,17 +315,56 @@ const returnOrder = async (req,res,next) =>{
 
 
 
+//---------------- USER ORDER INVOICE DOWNLODE SECTION SECTION START
+const loadinvoice = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const session = req.session.user_id;
+    const userData = await User.findById({_id:session})
+    const orderData = await Order.findOne({_id:id}).populate('products.productId');
+    const date = new Date()
+   
+     data = {
+      order:orderData,
+      user:userData,
+      date,
+    }
+
+    const filepathName = path.resolve(__dirname, '../views/user/invoice.ejs');
+    const html = fs.readFileSync(filepathName).toString();
+    const ejsData = ejs.render(html, data);
+    
+    const browser = await puppeteer.launch({ headless: 'new' });
+    const page = await browser.newPage();
+    await page.setContent(ejsData, { waitUntil: 'networkidle0' });
+    const pdfBytes = await page.pdf({ format: 'Letter' });
+    await browser.close();
+
+   
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename= order invoice.pdf');
+    res.send(pdfBytes);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('An error occurred');
+  }
+};
+
+
+
 module.exports = {
-    loadUserdashboard,
-    updateUserDashboard,
-    editUserDashboad,
-    loadUserAddress,
-    insertUserAddresss,
-    editUserAddress,
-    updateAddress,
-    deleteUserAddress,
-    loadeUserOrder,
-    loadViewOrder,
-    cancelOrder,
-    returnOrder,
+  loadUserdashboard,
+  updateUserDashboard,
+  editUserDashboad,
+  loadUserAddress,
+  insertUserAddresss,
+  editUserAddress,
+  updateAddress,
+  deleteUserAddress,
+  loadeUserOrder,
+  loadViewOrder,
+  cancelOrder,
+  returnOrder,
+  loadinvoice,
 }

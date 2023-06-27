@@ -6,6 +6,7 @@ const Category = require('../models/categoryModel');
 const nodemailer = require('nodemailer');
 const Wishlist = require('../models/wishlistModel');
 const passwordValidator = require('password-validator');
+
 let otp
 
 
@@ -454,6 +455,10 @@ const priceSort = async (req, res, next) => {
     next(err);
   }
 };
+
+
+
+
 
 
 module.exports = {

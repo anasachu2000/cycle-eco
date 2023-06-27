@@ -75,7 +75,7 @@ adminRoute.post('/addOffer',productController.addOffer);
 
 //---------------- SALES REPORT ROUTE SECTION START
 adminRoute.get('/saleReport',adminController.loadSalesReport);
-
+adminRoute.post('/salesReportPdf/:id',adminController.salesReportPdf);
 
 
 adminRoute.get('*',(req,res)=>{
