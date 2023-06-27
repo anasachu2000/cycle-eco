@@ -87,6 +87,7 @@ const cahngeStatus = async(req,res,next)=>{
     const status = req.body.status;
     const orderId = req.body.orderId;
     const userId = req.body.userId;
+
     const updateOrder = await Order.findOneAndUpdate(
       {
         userId: userId,
@@ -99,6 +100,20 @@ const cahngeStatus = async(req,res,next)=>{
       },
       { new: true }
     );
+    if(status === 'Delivered'){
+      await Order.findOneAndUpdate(
+        {
+          userId: userId,
+          'products._id': orderId
+        },
+        {
+          $set: {
+            'products.$.deleveryDate': new Date()
+          }
+        },
+        { new: true }
+      );
+    }
     if(updateOrder){
       res.json({success:true})
     }

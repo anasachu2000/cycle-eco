@@ -64,7 +64,7 @@ adminRoute.post('/changeStatus',adminOrderController.cahngeStatus);
 adminRoute.get('/couponList',auth.isLogin,couponController.loadCopon);
 adminRoute.post('/addCoupon',couponController.addCoupon);
 adminRoute.post('/editCoupon/:id',couponController.editCoupon);
-adminRoute.get('/deleteCoupon',couponController.deleteCoupon);
+adminRoute.get('/deleteCoupon',auth.isLogin,couponController.deleteCoupon);
 
 
 
@@ -74,8 +74,8 @@ adminRoute.post('/addOffer',productController.addOffer);
 
 
 //---------------- SALES REPORT ROUTE SECTION START
-adminRoute.get('/saleReport',adminController.loadSalesReport);
-adminRoute.post('/salesReportPdf/:id',adminController.salesReportPdf);
+adminRoute.get('/saleReport',auth.isLogin,adminController.loadSalesReport);
+adminRoute.get('/salesReportPdf/:id',adminController.salesReportPdf);
 
 
 adminRoute.get('*',(req,res)=>{

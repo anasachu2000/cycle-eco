@@ -10,7 +10,7 @@ const path = require('path')
 //---------------- ADMIN PRODUCT SHOWING SECTION START
 const loadProductlist = async(req,res,next)=>{
   try{
-      const categoryData = await Category.find({})
+      const categoryData = await Category.find({is_delete:false});
       const adminData = await User.findById({ _id: req.session.auser_id})
       const productData = await Product.find({is_delete:false});
       

@@ -9,7 +9,16 @@
         <div class="bg-secondary rounded h-100 p-4">
          <div class="d-flex justify-content-between pb-3">
           <h6 class="mb-4">Sales Report</h6>  
-       
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown button
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/admin/salesReportPdf/<%= 7 %>">Weekly sales</a></li>
+              <li><a class="dropdown-item" href="/admin/salesReportPdf/<%= 30 %>">Monthly sales</a></li>
+              <li><a class="dropdown-item" href="/admin/salesReportPdf/<%= 365 %>">Yearly sales</a></li>
+            </ul>
+          </div>
          </div>        
         <div class="table-responsive">  
           <table class="table">

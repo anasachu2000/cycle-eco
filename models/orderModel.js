@@ -48,6 +48,9 @@ products: [{
     returnReson:{
         type:String,
     },
+    deleveryDate:{
+        type:Date,
+    },
 }],
 totalAmount:{
     type:Number,

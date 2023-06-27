@@ -6,10 +6,11 @@
         <div class="col-sm-12 col-xl-12">
             <div class="bg-secondary rounded h-100 p-4">
                 <h6 class="mb-4">Basic Form</h6>
-                <form action="" method="post" enctype="multipart/form-data">
+                <form action="" method="post" enctype="multipart/form-data" id="form">
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1" name="productName" value="<%= product.productName %>">
+                        <input type="text" class="form-control" id="productName"  name="productName" value="<%= product.productName %>">
+                        <span class="text-danger" id="productName-error"></span>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Brand</label>
@@ -44,15 +45,18 @@
                         </button>  
                       <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Stock Quantity</label>
-                        <input type="text" class="form-control" id="recipient-name" name="StockQuantity" value="<%= product.stockQuantity %>">
+                        <input type="text" class="form-control" id="stockQuantity" name="StockQuantity" value="<%= product.stockQuantity %>">
+                        <span class="text-danger" id="stockQuantity-error"></span>
                       </div>
                       <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Price</label>
-                        <input type="text" class="form-control" id="recipient-name" name="price" value="<%= product.price %>">
+                        <input type="text" class="form-control" id="price" name="price" value="<%= product.price %>">
+                        <span class="text-danger" id="price-error"></span>
                       </div>
                       <div class="mb-3">
                         <label for="message-text" class="col-form-label">Discrption</label>
-                        <input type="text" class="form-control" id="recipient-name" name="description" value="<%= product.description %>">
+                        <input type="text" class="form-control" id="description" name="description" value="<%= product.description %>">
+                        <span class="text-danger" id="description-error"></span>
                       </div>
                      <a href="/admin/productList"><button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button></a>
                      <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Submit</button>
@@ -74,7 +78,8 @@
         <!-- form starts -->
         <form action="/admin/editProductList/updateimage/<%- product._id  %>" method="post" enctype="multipart/form-data">
             <div class="modal-body">
-                <input multiple type="file" class="form-control" id="basic-default-name" name="image" />
+                <input multiple type="file" class="form-control" id="formFileMultiple" name="image" />
+                <span class="text-danger" id="image-error"></span>
                 <br>
                 <% product.image.forEach((x,index)=> { %>
                     <img class="mb-3" src="/adminAssets/adminImages/<%= x %>" alt="" width="60px" height="50">
@@ -91,5 +96,82 @@
         </form>
     </div>
 </div>
+
+
+
+<script>
+  const form = document.getElementById("form");
+const productNameInput = document.getElementById("productName");
+const stockQuantityInput = document.getElementById('stockQuantity');
+const priceInput = document.getElementById('price');
+const descriptionInput = document.getElementById('description');
+const imageInput = document.getElementById('formFileMultiple');
+
+const productNameError = document.getElementById("productName-error");
+const stockQuantityError = document.getElementById("stockQuantity-error");
+const priceError = document.getElementById("price-error");
+const descriptionError = document.getElementById("description-error");
+const imageError = document.getElementById("image-error");
+
+
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const productNameValue = productNameInput.value.trim();
+  if (!productNameValue) {
+    productNameError.textContent = "Please enter a product name";
+    return;
+  } else {
+    productNameError.textContent = "";
+  }
+
+  const stockQuantityValue = stockQuantityInput.value.trim();
+  if (!stockQuantityValue) {
+    stockQuantityError.textContent = "Please enter a stock quantity";
+    return;
+  } else if (isNaN(stockQuantityValue) || Number(stockQuantityValue) <= 0 || Number(stockQuantityValue) % 1 !== 0) {
+    stockQuantityError.textContent = "Please enter a positive number for stock quantity";
+    return; 
+  } else {
+    stockQuantityError.textContent = "";
+  }
+
+  const priceValue = priceInput.value.trim();
+  if (!priceValue) {
+    priceError.textContent = "Please enter a price";
+    return;
+  } else if (isNaN(priceValue) || Number(priceValue) <= 0) {
+    priceError.textContent = "Please enter a positive number for price";
+    return;
+  } else {
+    priceError.textContent = "";
+  }
+
+  const descriptionValue = descriptionInput.value.trim();
+  if (!descriptionValue) {
+    descriptionError.textContent = "Please enter a description";
+    return;
+  } else {
+    descriptionError.textContent = "";
+  }
+
+  const imageFile = imageInput.files[0];
+  if (!imageFile) {
+    imageError.textContent = "Please select an image";
+    return;
+  } else {
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    if (!allowedExtensions.exec(imageFile.name)) {
+      imageError.textContent = "Invalid image file format";
+      return;
+    }
+    imageError.textContent = "";
+  }
+
+
+  form.submit();
+});
+</script>
 
 <%- include('../adminLayouts/footer.ejs') %>  

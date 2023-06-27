@@ -130,13 +130,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/admin/productList" method="post" enctype="multipart/form-data">
+        <form action="/admin/productList" method="post" enctype="multipart/form-data" id="form">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Product Name</label>
-            <input type="text" class="form-control" id="recipient-name" name="productName" required>
+            <input type="text" class="form-control" id="productName" name="productName">
+            <span class="text-danger" id="productName-error"></span>
           </div>
           <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Brand</label>
+            <label for="recipient-name" class="col-form-label">Select Brand</label>
             <select class="form-select mb-3" aria-label="Default select example" name="brand">
               <option value="FireFox">FireFox</option>
               <option value="Hero">Hero</option>
@@ -146,7 +147,7 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Category</label>
+            <label for="recipient-name" class="col-form-label">Select Category</label>
             <select class="form-select mb-3" aria-label="Default select example" name="category">
               <% for(let i = 0;i < category.length; i++){
                 %>
@@ -160,19 +161,23 @@
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Image Upload</label>
-            <input class="form-control bg-dark" accept="Image/*" name="image" type="file" id="formFileMultiple" multiple required>
+            <input class="form-control bg-dark" accept="Image/*" name="image" type="file" id="formFileMultiple" multiple >
+            <span class="text-danger" id="image-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name"  class="col-form-label">Stock Quantity</label>
-            <input type="text" class="form-control" id="recipient-name" name="stockQuantity" required>
+            <input type="text" class="form-control" id="stockQuantity" name="stockQuantity" >
+            <span class="text-danger" id="stockQuantity-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Price</label>
-            <input type="text" class="form-control" id="recipient-name" name="price" required>
+            <input type="text" class="form-control" id="price" name="price" >
+            <span class="text-danger" id="price-error"></span>
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Discrption</label>
-            <textarea class="form-control" id="message-text" name="description" required></textarea>
+            <textarea class="form-control" id="description" name="description" ></textarea>
+            <span class="text-danger" id="description-error"></span>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
@@ -278,35 +283,80 @@
 
 
 
+   
+const form = document.getElementById("form");
+const productNameInput = document.getElementById("productName");
+const stockQuantityInput = document.getElementById('stockQuantity');
+const priceInput = document.getElementById('price');
+const descriptionInput = document.getElementById('description');
+const imageInput = document.getElementById('formFileMultiple');
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const stockQuantityInput = document.getElementById("stockQuantityInput");
-    const priceInput = document.getElementById("priceInput");
+const productNameError = document.getElementById("productName-error");
+const stockQuantityError = document.getElementById("stockQuantity-error");
+const priceError = document.getElementById("price-error");
+const descriptionError = document.getElementById("description-error");
+const imageError = document.getElementById("image-error");
 
-    // Add event listener for form submit event
-    document.querySelector("form").addEventListener("submit", function (event) {
-      event.preventDefault();
 
-      // Validate stock quantity
-      const stockQuantity = stockQuantityInput.value.trim();
-      if (stockQuantity === "") {
-        alert("Please enter a valid stock quantity.");
-        stockQuantityInput.focus();
-        return;
-      }
 
-      // Validate price
-      const price = priceInput.value.trim();
-      if (price === "" || isNaN(price)) {
-        alert("Please enter a valid price.");
-        priceInput.focus();
-        return;
-      }
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
 
-      // Submit the form if validation passes
-      this.submit();
-    });
-  });
+  const productNameValue = productNameInput.value.trim();
+  if (!productNameValue) {
+    productNameError.textContent = "Please enter a product name";
+    return;
+  } else {
+    productNameError.textContent = "";
+  }
+
+  const stockQuantityValue = stockQuantityInput.value.trim();
+  if (!stockQuantityValue) {
+    stockQuantityError.textContent = "Please enter a stock quantity";
+    return;
+  } else if (isNaN(stockQuantityValue) || Number(stockQuantityValue) <= 0 || Number(stockQuantityValue) % 1 !== 0) {
+    stockQuantityError.textContent = "Please enter a positive number for stock quantity";
+    return; 
+  } else {
+    stockQuantityError.textContent = "";
+  }
+
+  const priceValue = priceInput.value.trim();
+  if (!priceValue) {
+    priceError.textContent = "Please enter a price";
+    return;
+  } else if (isNaN(priceValue) || Number(priceValue) <= 0) {
+    priceError.textContent = "Please enter a positive number for price";
+    return;
+  } else {
+    priceError.textContent = "";
+  }
+
+  const descriptionValue = descriptionInput.value.trim();
+  if (!descriptionValue) {
+    descriptionError.textContent = "Please enter a description";
+    return;
+  } else {
+    descriptionError.textContent = "";
+  }
+
+  const imageFile = imageInput.files[0];
+  if (!imageFile) {
+    imageError.textContent = "Please select an image";
+    return;
+  } else {
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    if (!allowedExtensions.exec(imageFile.name)) {
+      imageError.textContent = "Invalid image file format";
+      return;
+    }
+    imageError.textContent = "";
+  }
+
+
+  form.submit();
+});
+
 
 
 </script>
