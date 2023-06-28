@@ -8,6 +8,7 @@ const categoryController = require('../controllers/categoryController');
 const productController = require('../controllers/productController');
 const adminOrderController = require('../controllers/adminOrderController');
 const couponController = require('../controllers/couponController');
+const bannerController = require('../controllers/bannerController');
 const update = require('../configuration/multer');
 const errorHandler = require('../middleware/errorHandling');
 
@@ -76,6 +77,14 @@ adminRoute.post('/addOffer',productController.addOffer);
 //---------------- SALES REPORT ROUTE SECTION START
 adminRoute.get('/saleReport',auth.isLogin,adminController.loadSalesReport);
 adminRoute.get('/salesReportPdf/:id',adminController.salesReportPdf);
+
+
+
+//---------------- bannerList ROUTE SECTION START
+adminRoute.get('/bannerList',bannerController.loadBanner)
+adminRoute.post('/insertBanner',update.upload.single("image"),bannerController.insertBanner)
+
+
 
 
 adminRoute.get('*',(req,res)=>{

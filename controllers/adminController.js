@@ -200,7 +200,7 @@ const loadSalesReport = async (req,res,next) =>{
     ]);
 
     const page = parseInt(req.query.page) || 1;
-    const limit = 4;
+    const limit = 20;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const orderCount = order.length;
@@ -259,7 +259,7 @@ const salesReportPdf = async (req,res,next) =>{
       ]);
 
       const pages = parseInt(req.query.page) || 1;
-      const limit = 4;
+      const limit = 20;
       const startIndex = (pages - 1) * limit;
       const endIndex = pages * limit;
       const orderCount = order.length;
@@ -306,70 +306,69 @@ const salesReportPdf = async (req,res,next) =>{
 
 //---------------- ADMIN LOGOUT SECTION START
 const adminLogout = async (req,res,next)=>{
-    try{
-        req.session.destroy();
-        res.redirect('/admin')
-    }catch(err){
-        next(err);
-    }
+  try{
+      req.session.destroy();
+      res.redirect('/admin')
+  }catch(err){
+      next(err);
+  }
 }
 
 
 
 //---------------- ADMIN USERLIST SHOWING SECTION START
 const loadUserList = async (req,res,next)=>{
-    try{
-        const adminData = await User.findById({ _id: req.session.auser_id})
-        const userData = await User.find({is_admin:0})
-
-        const page = parseInt(req.query.page) || 1; 
-        const limit = 4; 
-        const startIndex = (page - 1) * limit; 
-        const endIndex = page * limit; 
-        const userCount = userData.length;
-        const totalPages = Math.ceil(userCount / limit); 
-        const paginatedCategory = userData.slice(startIndex, endIndex);
+  try{
+    const adminData = await User.findById({ _id: req.session.auser_id})
+    const userData = await User.find({is_admin:0})
 
 
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 20; 
+    const startIndex = (page - 1) * limit; 
+    const endIndex = page * limit; 
+    const userCount = userData.length;
+    const totalPages = Math.ceil(userCount / limit); 
+    const paginatedCategory = userData.slice(startIndex, endIndex);
 
-        res.render('userList',
-        {
-          admin:adminData,
-          useres:userData,
-          activePage: 'userList',
-          useres: paginatedCategory, 
-          currentPage: page,
-          totalPages: totalPages,
-        });
 
-    }catch(err){
-        next(err);
-    }
+    res.render('userList',
+    {
+      admin:adminData,
+      useres:userData,
+      activePage: 'userList',
+      useres: paginatedCategory, 
+      currentPage: page,
+      totalPages: totalPages,
+    });
+  }catch(err){
+      next(err);
+  }
 }
 
 
 
 //---------------- ADMIN USER BLOCKING SECTION START
 const block = async (req,res,next)=>{
-    try{
-        const userData = await User.findByIdAndUpdate(req.query.id,{$set:{is_block:true}});
-        req.session.useres = null
-        res.redirect('/admin/userList')
-    }catch(err){
-        next(err);
-    }
+  try{
+      const userData = await User.findByIdAndUpdate(req.query.id,{$set:{is_block:true}});
+      req.session.useres = null
+      res.redirect('/admin/userList')
+  }catch(err){
+      next(err);
+  }
 }
 
 
 
 //---------------- ADMIN USER UNBLOCKING SECTION START
 const unblock = async (req,res,next)=>{
-    try{
-        const userData = await User.findByIdAndUpdate(req.query.id,{$set:{is_block:false}});
-        res.redirect('/admin/userList')
-    }catch(err){
-        next(err);
-    }
+  try{
+      const userData = await User.findByIdAndUpdate(req.query.id,{$set:{is_block:false}});
+      res.redirect('/admin/userList')
+  }catch(err){
+      next(err);
+  }
 }
 
 

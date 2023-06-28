@@ -23,15 +23,17 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/updateUserData" method="post">
+        <form action="/updateUserData" method="post" id="form">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Name:</label>
-            <input type="text" class="form-control" id="recipient-name" name="name" value="<%= user.name %>">
+            <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>">
             <input type="hidden" name="id" value="<%= user._id %>"> 
+            <span class="text-danger" id="name-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Mobile:</label>
-            <input type="text" class="form-control" id="recipient-name" name="number" value="<%= user.number %>">
+            <input type="text" class="form-control" id="mobile" name="number" value="<%= user.number %>">
+            <span class="text-danger" id="mobile-error"></span>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -42,6 +44,41 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  const form = document.getElementById('form');
+  const nameInput = document.getElementById('name');
+  const mobileInput = document.getElementById('mobile');
+
+  const nameError = document.getElementById('name-error');
+  const mobileError = document.getElementById('mobile-error');
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const nameValue = nameInput.value.trim();
+    const mobileValue = mobileInput.value.trim();
+
+    if (!/^[A-Za-z]+$/.test(nameValue)) {
+      nameError.textContent = "Please enter a valid name";
+      return;
+    } else {
+      nameError.textContent = "";
+    }
+
+
+    if (!/^\d{10}$/.test(mobileValue)) {
+      mobileError.textContent = "Please enter a valid 10-digit mobile number";
+      return;
+    } else {
+      mobileError.textContent = "";
+    }
+
+    form.submit();
+  });
+</script>
+
 
 <%- include('../userLayouts/accountFooter.ejs') %>
 <%- include('../userLayouts/footer.ejs') %>

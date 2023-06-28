@@ -1,0 +1,81 @@
+<%- include('../adminLayouts/header.ejs') %>
+<%- include('../adminLayouts/navbar.ejs') %>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded h-100 p-4">
+                <div style="display: flex; justify-content: space-between;">
+                    <h6 class="mb-4">Ads Table</h6>
+                    <button type="button" class="btn btn-outline-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add Ads</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                              <th scope="col">No</th>
+                              <th scope="col">Image</th>
+                              <th scope="col">Banner Text</th>
+                              <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <% if(banner.length > 0){
+                            banner.forEach((banner,i) => { %>
+                              <tr>
+                                <td><%= i + 1 %></td>
+                                <td class="py-1">                                 
+                                    <img style="width: 100px; height: 100px;" src="/adminAssets/adminImages/<%= banner.image %>" alt="image" />                                 
+                                </td>
+                                <td><%= banner.heading %></td> 
+                                <td>
+                                  <a href="/admin/editProductList/"><i class="bi bi-pencil-square bi fs-4"></i></a>
+                                </td>
+                              </tr>
+                              <% });
+                            }else { %> 
+                            <tr>
+                              <td>
+                                <td colspan="9">no any banner is added</td>
+                              </td>
+                            </tr>
+                            <% } %> 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>   
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #191C24;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/insertBanner" method="post" id="form" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Banner Text</label>
+              <input type="text" class="form-control"  name="text">
+              <span class="text-danger" id="category-error"></span>
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Banner Image Upload</label>
+                <input class="form-control bg-dark" accept="Image/*" type="file" name="image">
+                <span class="text-danger" id="image-error"></span>
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<%- include('../adminLayouts/footer.ejs') %>

@@ -1,40 +1,128 @@
-const salesSort = async(req,res) =>{
-	try {
-	  const adminData = await User.findById({ _id: req.session.Auser_id });
-	  const id = parseInt(req.params.id);
-	  const from = new Date();
-	  const to = new Date(from.getTime() - id * 24 * 60 * 60 * 1000);
-	  
-	  const order = await Order.aggregate([
-		{ $unwind: "$products" },
-		{$match: {
-		  'products.status': 'Delivered',
-		  $and: [
-			{ 'products.deliveredDate': { $gt: to } },
-			{ 'products.deliveredDate': { $lt: from } }
-		  ]
-		}},
-		{ $sort: { date: -1 } },
-		{
-		  $lookup: {
-			from: 'products',
-			let: { productId: { $toObjectId: '$products.productid' } },
-			pipeline: [
-			  { $match: { $expr: { $eq: ['$_id', '$$productId'] } } }
-			],
-			as: 'products.productDetails'
-		  }
-		},  
-		{
-		  $addFields: {
-			'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] }
-		  }
-		}
-	  ]);
+<script>
+	const form = document.querySelector('form');
+	const usernameInput = document.querySelector('input[name="Username"]');
+	const mobileInput = document.querySelector('input[name="number"]');
+	const altMobileInput = document.querySelector('input[name="AltrenativeMobile"]');
+	const houseNameInput = document.querySelector('input[name="houseName"]');
+	const cityInput = document.querySelector('input[name="city"]');
+	const stateInput = document.querySelector('input[name="state"]');
+	const pincodeInput = document.querySelector('input[name="pincode"]');
+	const landmarkInput = document.querySelector('input[name="landmark"]');
   
-	  res.render("sales-report", { order ,admin:adminData });
-	 
-	} catch (error) {
-	  console.log(error.message);
+	form.addEventListener('submit', (event) => {
+	  event.preventDefault();
+  
+	  if (!validateUsername()) {
+		return;
+	  }
+	  if (!validateMobile()) {
+		return;
+	  }
+	  if (!validateAltMobile()) {
+		return;
+	  }
+	  if (!validateHouseName()) {
+		return;
+	  }
+	  if (!validateCity()) {
+		return;
+	  }
+	  if (!validateState()) {
+		return;
+	  }
+	  if (!validatePincode()) {
+		return;
+	  }
+	  if (!validateLandmark()) {
+		return;
+	  }
+  
+	  form.submit();
+	});
+  
+	function validateUsername() {
+	  const value = usernameInput.value.trim();
+	  if (value === '') {
+		alert('Please enter a username');
+		return false;
+	  }
+	  return true;
 	}
-  }
+  
+	function validateMobile() {
+	  const value = mobileInput.value.trim();
+	  if (value === '') {
+		alert('Please enter a mobile number');
+		return false;
+	  }
+	  const regex = /^\d{10}$/;
+	  if (!regex.test(value)) {
+		alert('Please enter a valid 10-digit mobile number');
+		return false;
+	  }
+	  return true;
+	}
+  
+	function validateAltMobile() {
+	  const value = altMobileInput.value.trim();
+	  if (value !== '') {
+		const regex = /^\d{10}$/;
+		if (!regex.test(value)) {
+		  alert('Please enter a valid 10-digit alternative mobile number');
+		  return false;
+		}
+	  }
+	  return true;
+	}
+  
+	function validateHouseName() {
+	  const value = houseNameInput.value.trim();
+	  if (value === '') {
+		alert('Please enter a house name');
+		return false;
+	  }
+	  return true;
+	}
+  
+	function validateCity() {
+	  const value = cityInput.value.trim();
+	  if (value === '') {
+		alert('Please enter a city');
+		return false;
+	  }
+	  return true;
+	}
+  
+	function validateState() {
+	  const value = stateInput.value.trim();
+	  if (value === '') {
+		alert('Please enter a state');
+		return false;
+	  }
+	  return true;
+	}
+  
+	function validatePincode() {
+	  const value = pincodeInput.value.trim();
+	  if (value === '') {
+		alert('Please enter a pincode');
+		return false;
+	  }
+	  const regex = /^\d{6}$/;
+	  if (!regex.test(value)) {
+		alert('Please enter a valid 6-digit pincode');
+		return false;
+	  }
+	  return true;
+	}
+  
+	function validateLandmark() {
+	  const value = landmarkInput.value.trim();
+	  if (value === '') {
+		alert('Please enter a landmark');
+		return false;
+	  }
+	  return true;
+	}
+  </script>
+  

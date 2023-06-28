@@ -11,7 +11,7 @@ const loadOrderList = async (req,res,next)=>{
     const orderData = await Order.find().populate("products.productId")
 
     const page = parseInt(req.query.page) || 1; 
-    const limit = 4; 
+    const limit = 20; 
     const startIndex = (page - 1) * limit; 
     const endIndex = page * limit; 
     const orderCount = orderData.length;
@@ -57,7 +57,7 @@ const loadSingleOrderList = async (req,res,next)=>{
 
 
     const page = parseInt(req.query.page) || 1; 
-    const limit = 4; 
+    const limit = 20; 
     const startIndex = (page - 1) * limit; 
     const endIndex = page * limit; 
     const orderCount = orderData.products.length;

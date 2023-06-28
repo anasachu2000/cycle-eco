@@ -76,10 +76,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <!-- form starts -->
-        <form action="/admin/editProductList/updateimage/<%- product._id  %>" method="post" enctype="multipart/form-data">
+        <form action="/admin/editProductList/updateimage/<%- product._id  %>" method="post" enctype="multipart/form-data" id="formImage">
             <div class="modal-body">
                 <input multiple type="file" class="form-control" id="formFileMultiple" name="image" />
-                <span class="text-danger" id="image-error"></span>
+                <span class="text-danger pb-2" id="image-error"></span>
                 <br>
                 <% product.image.forEach((x,index)=> { %>
                     <img class="mb-3" src="/adminAssets/adminImages/<%= x %>" alt="" width="60px" height="50">
@@ -100,7 +100,8 @@
 
 
 <script>
-  const form = document.getElementById("form");
+const form = document.getElementById("form");
+const formImage = document.getElementById('formImage')
 const productNameInput = document.getElementById("productName");
 const stockQuantityInput = document.getElementById('stockQuantity');
 const priceInput = document.getElementById('price');
@@ -112,6 +113,28 @@ const stockQuantityError = document.getElementById("stockQuantity-error");
 const priceError = document.getElementById("price-error");
 const descriptionError = document.getElementById("description-error");
 const imageError = document.getElementById("image-error");
+
+
+
+
+formImage.addEventListener('submit',(event) =>{
+  event.preventDefault();
+
+  const imageFile = imageInput.files[0];
+  if (!imageFile) {
+    imageError.textContent = "Please select an image";
+    return;
+  } else {
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    if (!allowedExtensions.exec(imageFile.name)) {
+      imageError.textContent = "Invalid image file format";
+      return;
+    }
+    imageError.textContent = "";
+  }
+
+  formImage.submit();
+})
 
 
 
@@ -130,7 +153,7 @@ form.addEventListener("submit", (event) => {
   if (!stockQuantityValue) {
     stockQuantityError.textContent = "Please enter a stock quantity";
     return;
-  } else if (isNaN(stockQuantityValue) || Number(stockQuantityValue) <= 0 || Number(stockQuantityValue) % 1 !== 0) {
+  } else if (isNaN(stockQuantityValue) || Number(stockQuantityValue) < 0 || Number(stockQuantityValue) % 1 !== 0) {
     stockQuantityError.textContent = "Please enter a positive number for stock quantity";
     return; 
   } else {
@@ -156,20 +179,7 @@ form.addEventListener("submit", (event) => {
     descriptionError.textContent = "";
   }
 
-  const imageFile = imageInput.files[0];
-  if (!imageFile) {
-    imageError.textContent = "Please select an image";
-    return;
-  } else {
-    const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-    if (!allowedExtensions.exec(imageFile.name)) {
-      imageError.textContent = "Invalid image file format";
-      return;
-    }
-    imageError.textContent = "";
-  }
-
-
+  
   form.submit();
 });
 </script>

@@ -6,6 +6,7 @@ const Category = require('../models/categoryModel');
 const nodemailer = require('nodemailer');
 const Wishlist = require('../models/wishlistModel');
 const passwordValidator = require('password-validator');
+const Banner = require('../models/bannerModel')
 
 let otp
 
@@ -206,18 +207,19 @@ const loadHome = async (req, res,next) => {
   try {
     const session = req.session.user_id;
     const productData = await Product.find({is_delete:false})
+    const bannerData = await Banner.find();
     
     
     if (!session) {
-      return res.render("home",{session:session,product:productData});
+      return res.render("home",{session:session,product:productData,banner:bannerData});
     }
 
     const userData = await User.findById({_id:req.session.user_id});
     if (userData) {
-      return res.render("home", { user: userData,session,product:productData});
+      return res.render("home", { user: userData,session,product:productData,banner:bannerData});
     } else {
       const session = null
-      return res.render("home",{session,product:productData});
+      return res.render("home",{session,product:productData,banner:bannerData});
     }
   } catch (err) {
     next(err)
