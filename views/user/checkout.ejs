@@ -145,39 +145,47 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/checkOutAddressList" method="post">
+        <form action="/checkOutAddressList" method="post" id="form">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Username:</label>
-            <input type="text" class="form-control" id="recipient-name" name="Username" >
+            <input type="text" class="form-control" id="username" name="Username" >
             <input type="hidden" name="id" > 
+            <span class="text-danger" id="username-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Mobile:</label>
-            <input type="text" class="form-control" id="recipient-name" name="number" >
+            <input type="text" class="form-control" id="mobile" name="number" >
+            <span class="text-danger" id="mobile-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">AltrenativeMobile:</label>
-            <input type="text" class="form-control" id="recipient-name" name="AltrenativeMobile" >
+            <input type="text" class="form-control" id="altrenativeMobile" name="AltrenativeMobile" >
+            <span class="text-danger" id="altrenativeMobile-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">House Name:</label>
-            <input type="text" class="form-control" id="recipient-name" name="houseName" >
+            <input type="text" class="form-control" id="housename" name="houseName" >
+            <span class="text-danger" id="housename-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">City:</label>
-            <input type="text" class="form-control" id="recipient-name" name="city" >
+            <input type="text" class="form-control" id="city" name="city" >
+            <span class="text-danger" id="city-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">State:</label>
-            <input type="text" class="form-control" id="recipient-name" name="state" >
+            <input type="text" class="form-control" id="state" name="state" >
+            <span class="text-danger" id="state-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Pincode:</label>
-            <input type="text" class="form-control" id="recipient-name" name="pincode" >
+            <input type="text" class="form-control" id="pincode" name="pincode" >
+            <span class="text-danger" id="pincode-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Landmark:</label>
-            <input type="text" class="form-control" id="recipient-name" name="landmark" >
+            <input type="text" class="form-control" id="landmark" name="landmark" >
+            <span class="text-danger" id="landmark-error"></span>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -200,39 +208,46 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/updatecheckoutAddress" method="post">
+        <form action="/updatecheckoutAddress" method="post" id="formEdit">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Username:</label>
-            <input type="text" class="form-control" id="recipient-name" name="Username" value="<%=address.userName %>">
+            <input type="text" class="form-control" id="usernameedit" name="Username" value="<%=address.userName %>">
             <input type="hidden" name="id" value="<%= address._id %>"> 
+            <span class="text-danger" id="usernameedit-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Mobile:</label>
-            <input type="text" class="form-control" id="recipient-name" name="number" value="<%=address.mobile %> ">
+            <input type="text" class="form-control" id="mobileedit" name="number" value="<%=address.mobile %> ">
+            <span class="text-danger" id="mobileedit-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">AltrenativeMobile:</label>
-            <input type="text" class="form-control" id="recipient-name" name="AltrenativeMobile" value="<%=address.altrenativeMob %>">
+            <input type="text" class="form-control" id="altrenativeMobileedit" name="AltrenativeMobile" value="<%=address.altrenativeMob %>">
+            <span class="text-danger" id="altrenativeMobileedit-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">House Name:</label>
-            <input type="text" class="form-control" id="recipient-name" name="houseName" value="<%=address.houseName %>" >
+            <input type="text" class="form-control" id="housenameedit" name="houseName" value="<%=address.houseName %>" >
+            <span class="text-danger" id="housenameedit-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">City:</label>
-            <input type="text" class="form-control" id="recipient-name" name="city" value="<%=address.city %> ">
-          </div>
+            <input type="text" class="form-control" id="cityedit" name="city" value="<%=address.city %> ">
+            <span class="text-danger" id="cityedit-error"></span>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">State:</label>
-            <input type="text" class="form-control" id="recipient-name" name="state" value="<%=address.state %>">
+            <input type="text" class="form-control" id="stateedit" name="state" value="<%=address.state %>">
+            <span class="text-danger" id="stateedit-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Pincode:</label>
-            <input type="text" class="form-control" id="recipient-name" name="pincode" value="<%=address.pincode %>">
+            <input type="text" class="form-control" id="pincodeedit" name="pincode" value="<%=address.pincode %>">
+            <span class="text-danger" id="pincodeedit-error"></span>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Landmark:</label>
-            <input type="text" class="form-control" id="recipient-name" name="landmark" value="<%=address.landmark %> ">
+            <input type="text" class="form-control" id="landmarkedit" name="landmark" value="<%=address.landmark %> ">
+            <span class="text-danger" id="landmarkedit-error"></span>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -491,5 +506,195 @@ function verifyPayment(payment,order){
       }
     });
   }
+
+
+
+  const form = document.getElementById('form');
+  const usernameInput = document.getElementById('username');
+  const mobileInput = document.getElementById('mobile');
+  const altMobileInput = document.getElementById('altrenativeMobile');
+  const houseNameInput = document.getElementById('housename');
+  const cityInput = document.getElementById('city');
+  const stateInput = document.getElementById('state');
+  const pincodeInput = document.getElementById('pincode');
+  const landmarkInput = document.getElementById('landmark');
+
+  const usernameError = document.getElementById('username-error');
+  const mobileError = document.getElementById('mobile-error');
+  const altMobileError = document.getElementById('altrenativeMobile-error');
+  const houseNameError = document.getElementById('housename-error');
+  const cityError = document.getElementById('city-error');
+  const stateError = document.getElementById('state-error');
+  const pincodeError = document.getElementById('pincode-error');
+  const landmarkError = document.getElementById('landmark-error');
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const usernameValue = usernameInput.value.trim();
+    const mobileValue = mobileInput.value.trim();
+    const altMobileValue = altMobileInput.value.trim();
+    const houseNameValue = houseNameInput.value.trim();
+    const cityValue = cityInput.value.trim();
+    const stateValue = stateInput.value.trim();
+    const pincodeValue = pincodeInput.value.trim();
+    const landmarkValue = landmarkInput.value.trim();
+
+    if (!/^[A-Za-z]+$/.test(usernameValue)) {
+        usernameError.textContent = 'Please enter a username';
+        return false;
+    } else {
+        usernameError.textContent = '';
+    }
+
+    if (!mobileValue || isNaN(mobileValue) || mobileValue.length !== 10) {
+        mobileError.textContent = 'Please enter a valid 10-digit mobile number';
+        return false;
+    } else {
+        mobileError.textContent = '';
+    }
+
+    if (!altMobileValue || (isNaN(altMobileValue) || altMobileValue.length !== 10)) {
+      altMobileError.textContent = 'Please enter a valid 10-digit alternative mobile number';
+        return false;
+    } else {
+      altMobileError.textContent = '';
+    }
+
+    if (!houseNameValue) {
+        houseNameError.textContent = 'Please enter a house name';
+        return false;
+    } else {
+        houseNameError.textContent = '';
+    }
+
+    if (!cityValue) {
+        cityError.textContent = 'Please enter a city';
+        return false;
+    } else {
+        cityError.textContent = '';
+    }
+
+    if (!stateValue) {
+        stateError.textContent = 'Please enter a state';
+        return false;
+    } else {
+        stateError.textContent = '';
+    }
+
+    if (!pincodeValue || isNaN(pincodeValue) || pincodeValue.length !== 6) {
+        pincodeError.textContent = 'Please enter a valid 6-digit pincode';
+        return false;
+    } else {
+        pincodeError.textContent = '';
+    }
+
+    if (!landmarkValue) {
+        landmarkError.textContent = 'Please enter a landmark';
+        return false;
+    } else {
+        landmarkError.textContent = '';
+    }
+
+    form.submit();
+  });
+
+
+  const formEdit = document.getElementById('formEdit');
+  const usernameEditInput = document.getElementById('usernameedit');
+  const mobileEditInput = document.getElementById('mobileedit');
+  const altMobileEditInput = document.getElementById('altrenativeMobileedit');
+  const houseNameEditInput = document.getElementById('housenameedit');
+  const cityEditInput = document.getElementById('cityedit');
+  const stateEditInput = document.getElementById('stateedit');
+  const pincodeEditInput = document.getElementById('pincodeedit');
+  const landmarkEditInput = document.getElementById('landmarkedit');
+
+  const usernameEditError = document.getElementById('usernameedit-error');
+  const mobileEditError = document.getElementById('mobileedit-error');
+  const altMobileEditError = document.getElementById('altrenativeMobileedit-error');
+  const houseNameEditError = document.getElementById('housenameedit-error');
+  const cityEditError = document.getElementById('cityedit-error');
+  const stateEditError = document.getElementById('stateedit-error');
+  const pincodeEditError = document.getElementById('pincodeedit-error');
+  const landmarkEditError = document.getElementById('landmarkedit-error');
+
+  formEdit.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const usernameEditValue = usernameEditInput.value.trim();
+    const mobileEditValue = mobileEditInput.value.trim();
+    const altMobileEditValue = altMobileEditInput.value.trim();
+    const houseNameEditValue = houseNameEditInput.value.trim();
+    const cityEditValue = cityEditInput.value.trim();
+    const stateEditValue = stateEditInput.value.trim();
+    const pincodeEditValue = pincodeEditInput.value.trim();
+    const landmarkEditValue = landmarkEditInput.value.trim();
+
+
+    if (!/^[A-Za-z]+$/.test(usernameEditValue)) {
+        usernameEditError.textContent = 'Please enter a username';
+        return false;
+    } else {
+        usernameEditError.textContent = '';
+    }
+
+    if (!mobileEditValue || isNaN(mobileEditValue) || mobileEditValue.length !== 10) {
+        mobileEditError.textContent = 'Please enter a valid 10-digit mobile number';
+        return false;
+    } else {
+        mobileEditError.textContent = '';
+    }
+
+    
+    if (altMobileEditValue && (isNaN(altMobileEditValue) || altMobileEditValue.length !== 10)) {
+        altMobileEditError.textContent = 'Please enter a valid 10-digit alternative mobile number';
+        return false;
+    } else {
+        altMobileEditError.textContent = '';
+    }
+
+    
+    if (!houseNameEditValue) {
+        houseNameEditError.textContent = 'Please enter a house name';
+        return false;
+    } else {
+        houseNameEditError.textContent = '';
+    }
+
+    
+    if (!cityEditValue) {
+        cityEditError.textContent = 'Please enter a city';
+        return false;
+    } else {
+        cityEditError.textContent = '';
+    }
+
+    
+    if (!stateEditValue) {
+        stateEditError.textContent = 'Please enter a state';
+        return false;
+    } else {
+        stateEditError.textContent = '';
+    }
+
+    
+    if (!pincodeEditValue || isNaN(pincodeEditValue) || pincodeEditValue.length !== 6) {
+        pincodeEditError.textContent = 'Please enter a valid 6-digit pincode';
+        return false;
+    } else {
+        pincodeEditError.textContent = '';
+    }
+
+    
+    if (!landmarkEditValue) {
+        landmarkEditError.textContent = 'Please enter a landmark';
+        return false;
+    } else {
+        landmarkEditError.textContent = '';
+    }
+
+    formEdit.submit();
+  });
 </script>        
 <%- include('../userLayouts/footer.ejs') %>

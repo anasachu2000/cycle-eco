@@ -29,9 +29,45 @@
                                 </td>
                                 <td><%= banner.heading %></td> 
                                 <td>
-                                  <a href="/admin/editProductList/"><i class="bi bi-pencil-square bi fs-4"></i></a>
+                                  <a data-bs-toggle="modal" data-bs-target="#editBannerModal" data-bs-whatever="@mdo"><i class="bi bi-pencil-square bi fs-4"></i></a>
                                 </td>
                               </tr>
+                              <div class="modal fade" id="editBannerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <!-- Edit Banner Modal content -->
+                                <div class="modal-dialog">
+                                  <div class="modal-content" style="background-color: #191C24;">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Edit Banner</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                      <form action="/admin/editBanner" method="post" class="forms-sample" enctype="multipart/form-data" id="editForm">
+                                        <div class="form-group">
+                                          <label for="exampleInputUsername1">Banner Heading</label>
+                                          <input type="text" class="form-control" value="<%= banner.heading %>" name="heading" id="headingEdit">
+                                          <span class="text-danger " id="headingEditError"></span>
+                                          <input type="hidden" class="form-control" value="<%= banner._id %>" name="id">
+                                          <input type="hidden" class="form-control" value="<%= banner.image %>" name="img">
+                                        </div>
+                                        <div class="form-group">
+                                          <label>File upload</label>
+                                          <div class="input-group col-xs-12">
+                                            <img src="/adminAssets/adminImages/<%= banner.image %>" alt="" width="100px" height="50">
+                                          </div>
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="recipient-name" class="col-form-label">Banner Image Upload</label>
+                                          <input class="form-control bg-dark" accept="Image/*" type="file" name="image">
+                                          <span class="text-danger" id="image-error"></span>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                                          <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>    
                               <% });
                             }else { %> 
                             <tr>
@@ -50,32 +86,71 @@
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content" style="background-color: #191C24;">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Category</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="/admin/insertBanner" method="post" id="form" enctype="multipart/form-data">
-            <div class="mb-3">
-              <label for="recipient-name" class="col-form-label">Banner Text</label>
-              <input type="text" class="form-control"  name="text">
-              <span class="text-danger" id="category-error"></span>
-            </div>
-            <div class="mb-3">
-                <label for="recipient-name" class="col-form-label">Banner Image Upload</label>
-                <input class="form-control bg-dark" accept="Image/*" type="file" name="image">
-                <span class="text-danger" id="image-error"></span>
-              </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content" style="background-color: #191C24;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Banner</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/insertBanner" method="post" id="form" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="bannerText" class="col-form-label">Banner Text</label>
+            <input type="text" class="form-control" name="text" id="bannerText">
+            <span class="text-danger" id="bannerText-error"></span>
+          </div>
+          <div class="mb-3">
+            <label for="bannerImage" class="col-form-label">Banner Image Upload</label>
+            <input class="form-control bg-dark" accept="image/*" type="file" name="image" id="bannerImage">
+            <span class="text-danger" id="image-error"></span>
+          </div>
+         
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
+
+<script>
+  const form = document.getElementById('form');
+  const bannerText = document.getElementById('bannerText');
+  const imageInput = document.getElementById('bannerImage');
+  const bannerTextError = document.getElementById('bannerText-error');
+  const imageError = document.getElementById('image-error');
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    // Validate banner text
+    if (bannerText.value.trim() === '') {
+      bannerTextError.textContent = "Please enter banner text";
+      return;
+    } else {
+      bannerTextError.textContent = "";
+    }
+
+    // Validate image file
+    const imageFile = imageInput.files[0];
+    if (!imageFile) {
+      imageError.textContent = "Please select an image";
+      return;
+    } else {
+      const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+      if (!allowedExtensions.test(imageFile.name)) {
+        imageError.textContent = "Invalid image file format";
+        return;
+      }
+      imageError.textContent = "";
+    }
+
+    form.submit();
+  });
+</script>
+
+
 
 <%- include('../adminLayouts/footer.ejs') %>

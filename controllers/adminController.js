@@ -13,12 +13,12 @@ let message = '';
 
 //---------------- ADMIN LOGIN PAGE SHOWING SECTION START
 const loadLogin = async(req,res,next)=>{
-    try{
-        res.render('login');
-    }
-    catch(err){
-        next(err);
-    }
+  try{
+      res.render('login');
+  }
+  catch(err){
+      next(err);
+  }
 }
 
 
@@ -26,25 +26,25 @@ const loadLogin = async(req,res,next)=>{
 //---------------- ADMIN VERIFY LOGIN SECTION START
 const verifyLogin = async(req,res,next)=>{
   try{  
-      const email = req.body.email;
-      const password = req.body.password;
-      const userData = await User.findOne({email:email});
-      if(userData){
-          const passwordMatch = await bcrypt.compare(password,userData.password);
-          if(passwordMatch){
-              if(userData.is_admin === 0){
-                  res.render('login',{message:'Email and password is incorrect'});
-              }else{
-                  req.session.auser_id = userData._id;
-                  res.redirect('/admin/home');
-              }
-          }else{
-              res.render('login',{message:'Email and password is incorrect'});
-          }
-      }else{
-          message='Email and Password is incorrect'
-          res.render('login');
-      }
+    const email = req.body.email;
+    const password = req.body.password;
+    const userData = await User.findOne({email:email});
+    if(userData){
+        const passwordMatch = await bcrypt.compare(password,userData.password);
+        if(passwordMatch){
+            if(userData.is_admin === 0){
+                res.render('login',{message:'Email and password is incorrect'});
+            }else{
+                req.session.auser_id = userData._id;
+                res.redirect('/admin/home');
+            }
+        }else{
+            res.render('login',{message:'Email and password is incorrect'});
+        }
+    }else{
+        message='Email and Password is incorrect'
+        res.render('login');
+    }
   }
   catch(err){
       next(err);
@@ -223,7 +223,7 @@ const loadSalesReport = async (req,res,next) =>{
 
 
 
-const salesReportPdf = async (req,res,next) =>{
+const salesReportSort = async (req,res,next) =>{
   try{
     const id = req.params.id;
     const adminData = await User.findById(req.session.auser_id);
@@ -267,36 +267,86 @@ const salesReportPdf = async (req,res,next) =>{
       const paginatedOrder = order.slice(startIndex, endIndex);
     
   
-      res.render("saleReport", 
-      { 
-        order:paginatedOrder,
-        admin:adminData,
-        activePage: 'saleReport',
-        order: paginatedOrder,
-        currentPage: pages,
-        totalPages: totalPages,
-      });
+    res.render("saleReport", 
+    { 
+      order:paginatedOrder,
+      admin:adminData,
+      activePage: 'saleReport',
+      order: paginatedOrder,
+      currentPage: pages,
+      totalPages: totalPages,
+    });
 
-      const data = {
-        order,
+  }catch(err){
+    next(err)
+  }
+}
+
+
+
+const salesReportPdf = async (req,res,next) =>{
+  try{
+    const id = req.params.id;
+    const adminData = await User.findById(req.session.auser_id);
+    const from = new Date();
+    const to = new Date(from.getTime() - id * 24 * 60 * 60 * 1000);
+    
+
+    const order = await Order.aggregate([
+      { $unwind: "$products" },
+      {$match: {
+        'products.status': 'Delivered',
+        $and: [
+        { 'products.deleveryDate': { $gt: to } },
+        { 'products.deleveryDate': { $lt: from } }
+        ]
+      }},
+      { $sort: { date: -1 } },
+      {
+        $lookup: {
+        from: 'products',
+        let: { productId: { $toObjectId: '$products.productId' } },
+        pipeline: [
+          { $match: { $expr: { $eq: ['$_id', '$$productId'] } } }
+        ],
+        as: 'products.productDetails'
+        }
+      },  
+      {
+        $addFields: {
+        'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] }
+        }
       }
-  
-      const filepathName = path.resolve(__dirname, '../views/admin/slaeReportPdf.ejs');
-      const html = fs.readFileSync(filepathName).toString();
-      const ejsData = ejs.render(html, data);
-      
-      const browser = await puppeteer.launch({ headless: 'new' });
-      const page = await browser.newPage();
-      await page.setContent(ejsData, { waitUntil: 'networkidle0' });
-      const pdfBytes = await page.pdf({ format: 'Letter' });
-      await browser.close();
-  
-     
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename= order invoice.pdf');
-      res.send(pdfBytes);
+      ]);
+
+    const pages = parseInt(req.query.page) || 1;
+    const limit = 20;
+    const startIndex = (pages - 1) * limit;
+    const endIndex = pages * limit;
+    const orderCount = order.length;
+    const totalPages = Math.ceil(orderCount / limit);
+    const paginatedOrder = order.slice(startIndex, endIndex);
   
 
+    const data = {
+      order,
+    }
+
+    const filepathName = path.resolve(__dirname, '../views/admin/slaeReportPdf.ejs');
+    const html = fs.readFileSync(filepathName).toString();
+    const ejsData = ejs.render(html, data);
+    
+    const browser = await puppeteer.launch({ headless: 'new' });
+    const page = await browser.newPage();
+    await page.setContent(ejsData, { waitUntil: 'networkidle0' });
+    const pdfBytes = await page.pdf({ format: 'Letter' });
+    await browser.close();
+
+    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename= order invoice.pdf');
+    res.send(pdfBytes);
+    
   }catch(err){
     next(err)
   }
@@ -378,6 +428,7 @@ module.exports = {
   verifyLogin,
   loadDashbord,
   loadSalesReport,
+  salesReportSort,
   salesReportPdf,
   adminLogout,
   loadUserList,

@@ -8,18 +8,30 @@
       <div class="col-12">
         <div class="bg-secondary rounded h-100 p-4">
          <div class="d-flex justify-content-between pb-3">
-          <h6 class="mb-4">Sales Report</h6>  
-          <div class="dropdown">
+          <h6 class="mb-4">Sales Report</h6>
+          <div class="d-flex">
+          <div class="dropdown mx-3">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown button
+              Sales Report Pdf
             </button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/admin/salesReportPdf/<%= 7 %>">Weekly sales</a></li>
               <li><a class="dropdown-item" href="/admin/salesReportPdf/<%= 30 %>">Monthly sales</a></li>
               <li><a class="dropdown-item" href="/admin/salesReportPdf/<%= 365 %>">Yearly sales</a></li>
             </ul>
+          </div> 
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Sales Report
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/admin/salesReportSort/<%= 7 %>">Weekly sales</a></li>
+              <li><a class="dropdown-item" href="/admin/salesReportSort/<%= 30 %>">Monthly sales</a></li>
+              <li><a class="dropdown-item" href="/admin/salesReportSort/<%= 365 %>">Yearly sales</a></li>
+            </ul>
           </div>
-         </div>        
+        </div>  
+      </div>  
         <div class="table-responsive">  
           <table class="table">
             <thead>

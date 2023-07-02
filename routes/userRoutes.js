@@ -94,7 +94,7 @@ userRoute.post('/applayCoupon',couponController.applayCoupon);
 
 
 //---------------- INVOICE DOWNLODING ROUTE SECTION START
-userRoute.get('/invoiceDownlode/:id',addressControler.loadinvoice);
+userRoute.get('/invoiceDownlode/:id',auth.isLogin,addressControler.loadinvoice);
   
 
 

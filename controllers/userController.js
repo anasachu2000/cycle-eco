@@ -429,7 +429,7 @@ const priceSort = async (req, res, next) => {
     const session = req.session.user_id;
     const userData = await User.findById(session);
     const categoryData = await Category.find({ is_delete: false });
-    const sortData = await Product.find().sort({ price: id });
+    const sortData = await Product.find({is_delete: false}).sort({ price: id });
 
 
     const page = parseInt(req.query.page) || 1;

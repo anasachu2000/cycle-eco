@@ -30,7 +30,7 @@
                             <div class="row justify-content-center">
                                 <%
                                 if(product.length > 0){
-                                    for(let i = 0; i < product.length;i++){
+                                    for(let i = 0; i < 4;i++){
                                         %>
                                 <div class="col-6 col-md-4 col-lg-3">
                                     <div class="product product-2">
@@ -179,9 +179,9 @@
                                 <div class="banner-set-content text-center">
                                     <div class="set-content-wrapper">
                                         <h4>Special</h4>
-                                        <h2>Refine Your Style.</h2>
+                                        <h2>PROMISES WE KEEP.</h2>
 
-                                        <p>Get on our exclusive email list and be the first to hear about sales, coupons, new arrivals and more! </p>
+                                        <p>We have a vast range starting from the basic beginner models to the most advanced types of bikes. Browse the bike types below or allow us the help you find the right one.</p>
 
                                         
                                     </div><!-- End .set-content-wrapper -->
@@ -193,12 +193,12 @@
                                         <img src="userAssets/images/demos/demo-5/banners/banner-4.jpg" alt="banner">
                                     </a>
                                     <div class="banner-content">
-                                        <h3 class="banner-title"><a href="#"><span>Casual basics and<br>trendy key pieces.</span></a></h3><!-- End .banner-title -->
+                                        <h3 class="banner-title"><a href="#"><span>Explore our range and<br>selected offer..</span></a></h3><!-- End .banner-title -->
                                         <h4 class="banner-subtitle">in this look</h4>
                                         <!-- End .banner-subtitle -->
-                                        <h4 class="banner-detail">• Rib-knit cardigan <br>• Linen-blend paper bag trousers</h4>
-                                        <h4 class="banner-price">$19.99 - $48.00</h4>
-                                        <a href="#" class="btn btn-outline-primary-2 banner-link">buy all</a>
+                                        <h4 class="banner-detail">• Suspension fork <br>•  Mechanical disc breaks</h4>
+                                        <h4 class="banner-price">₹ 14,500.00 - ₹ 15,000.00</h4>
+                                        <a href="/product" class="btn btn-outline-primary-2 banner-link">buy all</a>
                                     </div><!-- End .banner-content -->
                                 </div><!-- End .banner-set-image -->
                             </div><!-- End .col-lg-6 -->
@@ -218,7 +218,7 @@
                             <div class="row justify-content-center">
                                 <%
                                 if(product.length > 0){
-                                    for(let i = 0; i < product.length;i++){
+                                    for (let i = product.length - 1; i >= Math.max(product.length - 4, 0); i--) {
                                         %>
                                 <div class="col-6 col-md-4 col-lg-3">
                                     <div class="product product-2">

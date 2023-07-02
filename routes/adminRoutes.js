@@ -76,25 +76,26 @@ adminRoute.post('/addOffer',productController.addOffer);
 
 //---------------- SALES REPORT ROUTE SECTION START
 adminRoute.get('/saleReport',auth.isLogin,adminController.loadSalesReport);
-adminRoute.get('/salesReportPdf/:id',adminController.salesReportPdf);
+adminRoute.get('/salesReportPdf/:id',auth.isLogin,adminController.salesReportPdf);
+adminRoute.get('/salesReportSort/:id',auth.isLogin,adminController.salesReportSort);
 
 
 
 //---------------- bannerList ROUTE SECTION START
-adminRoute.get('/bannerList',bannerController.loadBanner)
+adminRoute.get('/bannerList',auth.isLogin,bannerController.loadBanner)
 adminRoute.post('/insertBanner',update.upload.single("image"),bannerController.insertBanner)
+adminRoute.post('/editBanner', update.upload.single('image'),bannerController.editBanner);
 
 
 
-
-adminRoute.get('*',(req,res)=>{
-  res.redirect('/admin')
-});
 
 
 
 adminRoute.use(errorHandler);
 
 
+adminRoute.get('*',(req,res)=>{
+  res.redirect('/admin')
+});
 
 module.exports = adminRoute;
